@@ -1,10 +1,9 @@
-const db = require('../config/database');
-const fs = require('fs')
-const path = require('path');
-const { validationResult } = require('express-validator');
-const Instructor = require('../models/instructor');
+import fs from 'fs';
+import path from 'path';
+import { validationResult } from 'express-validator';
+import Instructor from '../models/instructor.js';
 
-exports.getAllInstructors = async (req, res, next) => {
+export async function getAllInstructors(req, res, next) {
   try {
     const [allInstructor] = await Instructor.fetchAll();
     res.status(200).json(allInstructor);
@@ -12,9 +11,9 @@ exports.getAllInstructors = async (req, res, next) => {
     if (!err.statusCode) {err.statusCode = 500;}
     next(err);
 }
-};
+}
 
-exports.addInstructor = async (req, res, next) => {
+export async function addInstructor(req, res, next) {
   const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -39,9 +38,9 @@ exports.addInstructor = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}
 
-exports.deleteInstructor = async (req, res, next) => {
+export async function deleteInstructor(req, res, next) {
   console.log("Borrando instructor "+req.params.id)
     try {
         const [instructorData] = await Instructor.findById(req.params.id);
@@ -57,4 +56,4 @@ exports.deleteInstructor = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}

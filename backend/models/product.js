@@ -1,6 +1,6 @@
-const db = require('../util/database');
+import db from '../util/database.js';
 
-module.exports = class Product {
+export default class Product {
     constructor(title, description, sale_price, category, stock, image_url){
         this.title = title;
         this.description = description;s

@@ -18,7 +18,7 @@
         <h2>Clases</h2>
         <button *ngIf="getAuthService().isAdmin()" routerLink="/addClass">Agregar clase</button>
         <div class="classEvents">
-            <div class="containerClassEvent" *ngFor="let class of classes">
+            <div class="containerClassEvent" (click)="openEventDetails(class)" *ngFor="let class of classes">
                 <h3>{{ class.title }}</h3>
                 <p>{{ class.description }}</p>
                 <p>Cuota: ${{ class.monthly_fee }}</p>
@@ -26,6 +26,7 @@
                 <!-- <p>Texto del artículo que hay acá y es texto de prueba.</p> -->
                 <!-- <button *ngIf="getAuthService().isAdmin()" (click)="updateClass(class)">Modificar</button><br> -->
                 <button *ngIf="getAuthService().isAdmin()" (click)="deleteClass(class)">Eliminar clase</button>
+                <!-- <div id="wallet_container"></div> -->
             </div>
         </div>
     </section>
@@ -35,14 +36,15 @@
         <p>Eventos que se realizan un día y horario específico</p>
         <div class="classEvents" id="events">
             <div class="classEvents" id="events">
-                <div class="containerClassEvent" *ngFor="let event of events">
-                    <h3>{{ event.title }}</h3>
+                <div class="containerClassEvent" (click)="openEventDetails(event)" *ngFor="let event of events">
+                    <h3 class="event-title">{{ event.title }}</h3>
                     <p>{{ event.description }}</p>
                     <p>${{ event.price }}</p>
                     <img *ngIf="event.imageUrl" [src]="apiUrl + event.imageUrl" width="400" />
                     <!-- <p>Texto del artículo que hay acá y es texto de prueba.</p> -->
                     <!-- <button *ngIf="getAuthService().isAdmin()" (click)="updateEvent(event)">Modificar</button><br> -->
                     <button *ngIf="getAuthService().isAdmin()" (click)="deleteEvent(event)">Eliminar evento</button>
+                    <!-- <button (click)="registerAndPay(event)">Inscribirse y Pagar</button> -->
                 </div>
             </div>
         </div>

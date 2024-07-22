@@ -16,7 +16,8 @@ import { ErrorHandlerService } from './error-handler.service';
 export class AuthService {
   private url = "http://localhost:3000/auth"
   private secretKey = 'secretfortoken1205';
-  userId!: Pick<User, "id">;
+  // userId!: Pick<User, "id">;
+  userId!: number;
 
   httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ "Content-Type": "application/json" })
@@ -44,7 +45,6 @@ export class AuthService {
       );
 }
 
-
   signup(user: Omit<User, "id">): Observable<User> {
     return this.http
       .post<User>(`${this.url}/signup`, user, this.httpOptions)
@@ -63,7 +63,7 @@ export class AuthService {
       .pipe(
         first(),
         tap((tokenObject: { token: string, userId: Pick<User,"id">, name: string, email: string, role: string }) => {
-          this.userId = tokenObject.userId;
+          this.userId = Number(tokenObject.userId);
           localStorage.setItem("token", tokenObject.token);
           localStorage.setItem("role", tokenObject.role);
           this.router.navigate(['profile']);
@@ -104,6 +104,9 @@ export class AuthService {
             first(),
             tap(user => {
                 localStorage.setItem('loggedInUser', JSON.stringify(user));
+                console.log("USEERRR"+this.userId);
+                this.userId = user.id;
+                console.log("USEERRR"+this.userId);
                 this.router.navigate(['profile']);
             }),
             catchError(this.errorHandlerService.handleError<User>("googleLogin"))
@@ -123,12 +126,25 @@ export class AuthService {
     return !!(localStorage.getItem('token') || sessionStorage.getItem('loggedInUser'));
   }
 
-
   isAdmin(): boolean {
     const loggedInUser = sessionStorage.getItem("loggedInUser");
     if(loggedInUser){
       return JSON.parse(loggedInUser!).role === "admin";
     } 
     return localStorage.getItem('role') === "admin";
+  }
+
+  getUserId() {
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if(loggedInUser) {
+      return JSON.parse(loggedInUser!).id;
+    }
+    return this.userId;
+  }
+
+  getUserRegistrations(): Observable<any> {
+    const loggedInUser = localStorage.getItem("loggedInUser")
+    console.log('getUserRegistrations service '+JSON.parse(loggedInUser!).id);
+    return this.http.get(`${this.url}/user-registrations/${JSON.parse(loggedInUser!).id}`);
   }
 }

@@ -1,14 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const instructorsController = require('../controllers/instructors');
-const upload = require('../middleware/upload');
+import { Router } from 'express';
+const router = Router();
+import { getAllInstructors, addInstructor, deleteInstructor } from '../controllers/instructors.js';
 
-router.get('/', instructorsController.getAllInstructors);
+// import express from 'express';
+// const router = express.Router();
 
-router.post('/', instructorsController.addInstructor);
+router.get('/', getAllInstructors);
+
+router.post('/', addInstructor);
 
 // router.put('/:id', instructorsController.upload);
 
-router.delete('/:id', instructorsController.deleteInstructor);
+router.delete('/:id', deleteInstructor);
 
-module.exports = router;
+export default router;
+// export default router;

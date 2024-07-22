@@ -22,6 +22,13 @@
         <!-- Flyout menus -->
         <div class="hidden lg:ml-8 lg:block lg:self-stretch">
           <div class="flex h-full space-x-8">
+            <div *ngIf="isHomePage" class="flex">
+              <div class="relative flex">
+                <!-- Item active: "border-indigo-600 text-indigo-600", Item inactive: "border-transparent text-gray-700 hover:text-gray-800" -->
+                <button routerLink="/my-registrations" type="button" class="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800" aria-expanded="false">My Registrations</button>
+              </div>
+            </div>
+
             <div class="flex" *ngIf="!isProductsRoute">
               <div class="relative flex">
                 <!-- Item active: "border-indigo-600 text-indigo-600", Item inactive: "border-transparent text-gray-700 hover:text-gray-800" -->

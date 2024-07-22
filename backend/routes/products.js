@@ -1,18 +1,20 @@
-const express = require('express');
-const { body } = require('express-validator');
-const productsController = require('../controllers/products');
-const { isAuthenticated, isAdmin } = require('../middleware/auth');
-const router = express.Router();
-const authController = require('../controllers/auth');
-const upload = require('../middleware/upload');
+import { Router } from 'express';
+const router = Router();
+import { body } from 'express-validator';
+import { fetchAll, getProductById, postProduct, deleteProduct } from '../controllers/products.js';
+import { isAuthenticated, isAdmin } from '../middleware/auth.js';
+import upload from '../middleware/upload.js';
 
-router.get('/', productsController.fetchAll);
+// import express from 'express';
+// const router = express.Router();
 
-router.get('/:id', productsController.getProductById);
+router.get('/', fetchAll);
+
+router.get('/:id', getProductById);
 
 router.post(
     '/',
-    upload.single('image_url'),
+    upload('image_url'),
     [
         isAuthenticated, isAdmin,
         body('title').trim().not().isEmpty(),
@@ -21,12 +23,14 @@ router.post(
         body('category').trim().not().isEmpty(),
         body('stock').trim().not().isEmpty(),
         // body('id_supplier').trim().not().isEmpty(),
-    ], productsController.postProduct
+    ], postProduct
 );
 
 router.delete(
     // '/products/:id', productsController.deleteProduct
-    '/:id', isAuthenticated, isAdmin, productsController.deleteProduct
+    '/:id', isAuthenticated, isAdmin, deleteProduct
 );
 
-module.exports = router;
+export default router;
+// export default router;
+

@@ -1,14 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const eventsController = require('../controllers/events');
-const upload = require('../middleware/upload');
+import { Router } from 'express';
+const router = Router();
+import { getAllEvents, addEvent, deleteEvent, registerForEvent } from '../controllers/events.js';
+import upload from '../middleware/upload.js';
+// import express from 'express';
+// const router = express.Router();
 
-router.get('/', eventsController.getAllEvents);
+router.get('/', getAllEvents);
 
-router.post('/', upload.single('imageUrl'), eventsController.addEvent);
+router.post('/', upload('imageUrl'), addEvent);
 
 // router.put('/:id', eventsController.updateEvent);
 
-router.delete('/:id', eventsController.deleteEvent);
+router.delete('/:id', deleteEvent);
 
-module.exports = router;
+router.post('/:eventId/register', registerForEvent);
+
+// router.post('/:eventId/register-pay', registerAndPay);
+
+export default router;
+
+// export default router;

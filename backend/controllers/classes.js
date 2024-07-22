@@ -1,9 +1,9 @@
-const fs = require('fs')
-const SattvaClass = require('../models/class');
-const path = require('path');
-const { validationResult } = require('express-validator');
+import { existsSync, unlinkSync } from 'fs';
+import SattvaClass from '../models/class.js';
+import path from 'path';
+import { validationResult } from 'express-validator';
 
-exports.getAllClasses = async (req, res, next) => {
+export async function getAllClasses(req, res, next) {
   try {
     const [allClasses] = await SattvaClass.fetchAll();
     res.status(200).json(allClasses);
@@ -11,10 +11,10 @@ exports.getAllClasses = async (req, res, next) => {
     if (!err.statusCode) {err.statusCode = 500;}
     next(err);
 }
-};
+}
 
 
-exports.addClass = async (req, res, next) => {
+export async function addClass(req, res, next) {
   const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -53,7 +53,7 @@ exports.addClass = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}
 
 // exports.addClass = (req, res) => {
 //   const { title, description, instructor_id } = req.body;
@@ -83,7 +83,7 @@ exports.addClass = async (req, res, next) => {
 //   });
 // };
 
-exports.deleteClass = async (req, res, next) => {
+export async function deleteClass(req, res, next) {
   console.log("Borrando clase "+req.params.id)
     try {
         const [classData] = await SattvaClass.findById(req.params.id);
@@ -94,8 +94,8 @@ exports.deleteClass = async (req, res, next) => {
         
         const { id: classId, imageUrl } = classData[0];
 
-        if (fs.existsSync(imageUrl)) {
-            fs.unlinkSync(imageUrl);
+        if (existsSync(imageUrl)) {
+            unlinkSync(imageUrl);
         }
 
         const deleteResponse = await SattvaClass.delete(classId);
@@ -105,4 +105,4 @@ exports.deleteClass = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}

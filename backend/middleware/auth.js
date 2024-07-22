@@ -30,9 +30,10 @@
 //     next();
 // }
 
-const jwt = require('jsonwebtoken');
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
 
-module.exports.isAuthenticated = (req, res, next) => {
+export function isAuthenticated(req, res, next) {
     const authHeader = req.get('Authorization');
     if (!authHeader) {
         const error = new Error('Not authenticated');
@@ -44,7 +45,7 @@ module.exports.isAuthenticated = (req, res, next) => {
     let decodedToken;
 
     try {
-        decodedToken = jwt.verify(token, 'secretfortoken');
+        decodedToken = verify(token, 'secretfortoken');
     } catch (err) {
         err.statusCode = 500;
         throw err;
@@ -62,7 +63,7 @@ module.exports.isAuthenticated = (req, res, next) => {
     next();
 }
 
-module.exports.isAdmin = (req, res, next) => {
+export function isAdmin(req, res, next) {
     if (req.role !== 'admin') {
         const error = new Error('Not authorized');
         error.statusCode = 403;

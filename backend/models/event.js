@@ -24,9 +24,9 @@
 
 // module.exports = Event;
 
-const db = require('../util/database');
+import db from '../util/database.js';
 
-module.exports = class SattvaEvent {
+export default class SattvaEvent {
     constructor(title, description, instructor_id, imageUrl, dateTime, price){
         this.title = title;
         this.description = description;
@@ -57,5 +57,9 @@ module.exports = class SattvaEvent {
 
     static updateClass(classData) {
         return db.execute('SELECT * FROM events WHERE id = ?',[id]);
+    }
+
+    static registerForEvent(eventId, userId) {
+        return db.execute('INSERT INTO EventRegistrations (event_id, user_id) VALUES (?, ?)', [eventId, userId]);
     }
 };

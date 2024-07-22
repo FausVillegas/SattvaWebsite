@@ -4,6 +4,8 @@ import { first, Observable } from 'rxjs';
 import { Event } from '../models/Event';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from './error-handler.service';
+import { AuthService } from './auth.service';
+import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,7 @@ export class EventService {
     headers: new HttpHeaders({ "Content-Type": "application/json" })
   };
 
-  constructor(private http: HttpClient, private errorHandlerService: ErrorHandlerService) {}
+  constructor(private http: HttpClient, private errorHandlerService: ErrorHandlerService, private authService: AuthService) {}
 
   getEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(this.apiUrl,{ responseType: "json" })
@@ -49,4 +51,19 @@ export class EventService {
       }),
     )
   }
+
+  registerAndPay(event: Event): Observable<any> {
+    const userId = this.authService.getUserId();
+    return this.http.post<any>(`${this.apiUrl}/events/${event.id}/register-pay`, { userId, price: event.price, title: event.title });
+  }  
+
+  registerForEvent(eventId: number): Observable<any> {
+    const userId = this.authService.getUserId();
+    return this.http.post<any>(`${this.apiUrl}/events/${eventId}/register`, { userId }).pipe(
+      first(),
+      catchError(error => {
+        return this.errorHandlerService.handleError<Event>("registerForEvent")(error);
+      }),
+    );
+  }  
 }

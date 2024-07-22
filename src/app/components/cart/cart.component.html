@@ -11,17 +11,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of getCartService().getCartItems(); let i = index">
-        <img class="product-image" [src]='apiUrl+item.product.image_url'>
-        <td>{{ item.product.title }}</td>
+      <tr *ngFor="let item of items; let i = index">
+        <td><img class="product-image" [src]='apiUrl + item.image_url' alt="product-image"></td>
+        <td>{{ item.title }}</td>
         <td>{{ item.quantity }}</td>
-        <td>{{ item.product.sale_price*item.quantity | currency:'$':true }}</td>
-        <td><button (click)="getCartService().removeItem(i)">Eliminar</button></td>
+        <td>{{ item.sale_price * item.quantity | currency:'$':true }}</td>
+        <td><button (click)="removeItem(i)">Eliminar</button></td>
       </tr>
     </tbody>
   </table>
   <div class="total">
-    <p>Total: {{ getCartService().totalPrice | currency:'$':true }}</p>
+    <p>Total: {{ getCartService().getTotalPrice() | currency:'$':true }}</p>
   </div>
-  <button>Continuar compra</button>
+  <button (click)="onSubmit()">Continuar compra</button>
 </div>

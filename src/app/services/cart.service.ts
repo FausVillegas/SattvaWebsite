@@ -1,58 +1,54 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CartService {
+  private apiUrl = 'http://localhost:3000';
+  private cartItems = new BehaviorSubject<any[]>([]);
+  cartItems$ = this.cartItems.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getItemsInCart(): number {
-    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  loadCart(): void {
+    this.http.get<any[]>(`${this.apiUrl}/cart/${this.authService.getUserId()}`).subscribe((data: any[]) => {
+      this.cartItems.next(data);
+    });
   }
 
-  clearCart() {
-    this.cartItems = [];
-    return this.cartItems;
-  }
-  
-  //peticion get http precios de envío
-  getShipingPrices() {
-    return this.http.get<{ type: string; sale_price: number }[]>(
-      '/assets/shipping.json'
-    );
+  getCartItems(): any[] {
+    return this.cartItems.getValue();
   }
 
-  cartItems:any[] = []; 
-
-  addToCart(product: any) {
-    let item = this.cartItems.find(item => item.product.id === product.id);
-    if (!item) {
-      item = { product: product, quantity: 0 };
-      this.cartItems.push(item);
-    }
-    item.quantity++;
-  }
-
-  addToCartQuatity(product: any, quantity: number) {
-    let item = this.cartItems.find(item => item.product.id === product.id);
-    if (!item) {
-      item = { product: product, quantity: 0 };
-      this.cartItems.push(item);
-    }
-    item.quantity += quantity;
-  }
-
-  getCartItems() {
-    return this.cartItems;
-  }
-  
-  get totalPrice(): number {
-    return this.cartItems.reduce((total, item) => total + item.quantity * item.product.sale_price, 0);
+  addToCart(product: any, quantity: number): void {
+    const item = { userId: this.authService.getUserId(), productId: product.id, quantity };
+    this.http.post(`${this.apiUrl}/cart`, item).subscribe(() => {
+      this.loadCart();
+    });
   }
 
   removeItem(index: number): void {
-    this.cartItems.splice(index, 1);
+    const cartItems = this.getCartItems();
+    const productId = cartItems[index].product_id;
+    this.http.delete(`${this.apiUrl}/cart/${this.authService.getUserId()}/${productId}`).subscribe(() => {
+      this.loadCart();
+    });
+  }
+
+  clearCart(): void {
+    this.http.delete(`${this.apiUrl}/cart/${this.authService.getUserId()}`).subscribe(() => {
+      this.cartItems.next([]);
+    });
+  }
+
+  getTotalPrice(): number {
+    return this.getCartItems().reduce((total, item) => total + item.quantity * item.sale_price, 0);
+  }
+
+  getItemsInCart(): number {
+    return this.getCartItems().reduce((total, item) => total + item.quantity, 0);
   }
 }

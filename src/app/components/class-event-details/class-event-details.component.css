@@ -1,0 +1,28 @@
+.event-details-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: rgb(255, 237, 214);
+}
+
+.event-card {
+  max-width: 600px;
+  margin: 20px;
+  background-color: rgb(200, 200, 200);
+}
+
+.event-card img {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.price {
+  font-size: 1.5em;
+  color: #000000;
+  margin: 10px 0;
+}
+
+#checkout-btn {
+  background-color: #49a4b8;
+}

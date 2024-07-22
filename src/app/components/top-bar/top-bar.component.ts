@@ -10,6 +10,7 @@ import { CartService } from 'src/app/services/cart.service';
 })
 export class TopBarComponent{
   isProductsRoute: boolean = false;
+  isHomePage: boolean = false;
   searchTerm: string = '';
   showFilterMenu: boolean = false;
 
@@ -18,6 +19,7 @@ export class TopBarComponent{
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isProductsRoute = this.router.url.includes('/products');
+        this.isHomePage = event.urlAfterRedirects === '/';
       }
     });
   }

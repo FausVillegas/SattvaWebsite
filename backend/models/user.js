@@ -1,6 +1,6 @@
-const db = require('../util/database');
+import db from '../util/database.js';
 
-module.exports = class User {
+export default class User {
     constructor(id, name, email, password, role, phone, address, google_id){
         this.id = id;
         this.name = name;

@@ -1,0 +1,15 @@
+<div class="event-details-container">
+    <mat-card class="event-card">
+      <img mat-card-image *ngIf="apiUrl+data.imageUrl" [src]="apiUrl + data.imageUrl" alt="Image">
+      <mat-card-content>
+        <h2>{{data.title}}</h2>
+        <p>{{data.description}}</p>
+        <p class="price">${{price}}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button id="checkout-btn" (click)="createPreference()">Inscribirse y Pagar</button>
+      </mat-card-actions>
+      <div id="wallet_container"></div>
+    </mat-card>
+  </div>
+  

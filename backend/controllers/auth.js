@@ -1,15 +1,18 @@
-const { validationResult } = require('express-validator');
+import { validationResult } from 'express-validator';
 
-const nodemailer = require('nodemailer');
-require('dotenv').config();
-const crypto = require('crypto');
+import { createTransport } from 'nodemailer';
+import { config } from 'dotenv';
+config();
+import { randomBytes } from 'crypto';
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import hc from 'bcryptjs';
+const { hash, compare } = hc;
+import sd from 'jsonwebtoken';
+const { sign, decode } = sd;
 
-const User = require('../models/user');
+import User from '../models/user.js';
 
-const transporter = nodemailer.createTransport({
+const transporter = createTransport({
     service: 'Gmail', 
     auth: {
       user: process.env.MAIL_USERNAME,
@@ -25,7 +28,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-exports.sendPasswordResetEmail = async (req, res, next) => {
+export async function sendPasswordResetEmail(req, res, next) {
     const { email } = req.body;
     
     try {
@@ -41,21 +44,21 @@ exports.sendPasswordResetEmail = async (req, res, next) => {
         const storedUser = user[0][0];
 
         // Genera un token de restablecimiento
-        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetToken = randomBytes(32).toString('hex');
         const resetTokenExpiry = Date.now() + 3600000; // Token válido por 1 hora
 
         // Guarda el token y su expiración en el usuario
         storedUser.resetPasswordToken = resetToken;
         storedUser.resetPasswordExpiry = resetTokenExpiry;
 
-        await User.saveResetToken(storedUser.id, resetToken, resetTokenExpiry); // Esta función debe guardar el token y su expiración en la base de datos
+        await User.saveResetToken(storedUser.id, resetToken, resetTokenExpiry); 
 
         // URL de restablecimiento de contraseña
         const resetUrl = `http://localhost:4200/reset-password?token=${resetToken}`;
         
         // Configura el correo
         const mailOptions = {
-            from: 'sattva.syb@gmail.com',
+            from: process.env.MAIL_USERNAME,
             to: email,
             subject: 'Restablecimiento de Contraseña',
             html: `
@@ -76,10 +79,10 @@ exports.sendPasswordResetEmail = async (req, res, next) => {
         }
         next(err);
     }
-};
+}
 
 // Restablecer la contraseña
-exports.resetPassword = async (req, res) => {
+export async function resetPassword(req, res) {
     console.log("Funciona resetPassword");
     const { token, newPassword } = req.body;
     try {
@@ -88,7 +91,7 @@ exports.resetPassword = async (req, res) => {
             return res.status(400).json({ message: 'Token inválido o expirado' });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        const hashedPassword = await hash(newPassword, 12);
         await User.updatePassword(user[0].id, hashedPassword);
 
         res.status(200).json({ message: 'Contraseña restablecida con éxito' });
@@ -96,9 +99,9 @@ exports.resetPassword = async (req, res) => {
         console.error('Error al restablecer la contraseña:', err);
         res.status(500).json({ error: err.message });
     }
-};
+}
 
-exports.signup = async (req, res, next) => {
+export async function signup(req, res, next) {
     const errors = validationResult(req);
     
     const name = req.body.name;
@@ -113,7 +116,7 @@ exports.signup = async (req, res, next) => {
     }
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await hash(password, 12);
 
         const userDetails = {
             name: name,
@@ -128,9 +131,9 @@ exports.signup = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}
 
-exports.login = async (req, res, next) => {
+export async function login(req, res, next) {
     const email = req.body.email;
     const password = req.body.password;
 
@@ -145,7 +148,7 @@ exports.login = async (req, res, next) => {
 
         const storedUser = user[0][0];
 
-        const isEqual = await bcrypt.compare(password, storedUser.password);
+        const isEqual = await compare(password, storedUser.password);
 
         if (!isEqual) {
             const error = new Error('Wrong password!');
@@ -153,7 +156,7 @@ exports.login = async (req, res, next) => {
             throw error;
         }
 
-        const token = jwt.sign(
+        const token = sign(
             {
                 userId: storedUser.id,
                 name: storedUser.name,
@@ -171,11 +174,11 @@ exports.login = async (req, res, next) => {
         if (!err.statusCode) {err.statusCode = 500;}
         next(err);
     }
-};
+}
 
-exports.googleLogin = async (req, res, next) => {
+export async function googleLogin(req, res, next) {
     const { token } = req.body;
-    const decoded = jwt.decode(token);
+    const decoded = decode(token);
 
     try {
         let user = await User.find(decoded.email);
@@ -196,9 +199,9 @@ exports.googleLogin = async (req, res, next) => {
         }
         next(err);
     }
-};
+}
 
-exports.updateProfile = async (req, res, next) => {
+export async function updateProfile(req, res, next) {
     const { email, updatedProfile } = req.body;
 
     try {
@@ -226,7 +229,7 @@ exports.updateProfile = async (req, res, next) => {
         }
         next(err);
     }
-};
+}
 
 
 

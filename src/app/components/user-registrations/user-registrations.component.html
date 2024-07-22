@@ -1,0 +1,19 @@
+<div class="registrations-container">
+    <h2>Mis Eventos</h2>
+    <div *ngFor="let event of events" class="registration-card">
+      <img *ngIf="event.imageUrl" [src]="event.imageUrl" alt="Event Image">
+      <h3>{{ event.title }}</h3>
+      <p>{{ event.description }}</p>
+      <p>Fecha: {{ event.event_datetime | date:'short' }}</p>
+      <p>Precio: ${{ event.price }}</p>
+    </div>
+  
+    <h2>Mis Clases</h2>
+    <div *ngFor="let class of classes" class="registration-card">
+      <img *ngIf="class.imageUrl" [src]="class.imageUrl" alt="Class Image">
+      <h3>{{ class.title }}</h3>
+      <p>{{ class.description }}</p>
+      <p>Cuota Mensual: ${{ class.monthly_fee }}</p>
+    </div>
+  </div>
+  

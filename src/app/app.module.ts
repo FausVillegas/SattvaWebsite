@@ -23,6 +23,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { HomeComponent } from './components/home/home.component';
 import { ClassAddComponent } from './components/class-add/class-add.component';
 import { EventAddComponent } from './components/event-add/event-add.component';
+import { ClassEventDetailsComponent } from './components/class-event-details/class-event-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { UserRegistrationsComponent } from './components/user-registrations/user-registrations.component';
 
 @NgModule({
   declarations: [
@@ -38,9 +44,14 @@ import { EventAddComponent } from './components/event-add/event-add.component';
     ResetPasswordComponent,
     HomeComponent,
     ClassAddComponent,
-    EventAddComponent
+    EventAddComponent,
+    ClassEventDetailsComponent,
+    UserRegistrationsComponent,
   ],
   imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatDialogModule,
     BrowserModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -48,6 +59,7 @@ import { EventAddComponent } from './components/event-add/event-add.component';
     RouterModule.forRoot([
       // { path: '', redirectTo: '/products', pathMatch: 'full'},
       { path: '', component: HomeComponent},
+      { path: 'my-registrations', component: UserRegistrationsComponent },
       { path: 'profile', component: ProfileComponent},
       { path: 'products', component: ProductListComponent },
       { path: 'product/:id', component: ProductDetailsComponent },
@@ -59,6 +71,7 @@ import { EventAddComponent } from './components/event-add/event-add.component';
       { path: 'addEvent', component: EventAddComponent },
       // { path: 'shipping', component: ShippingComponent },
     ]),
+    BrowserAnimationsModule,
   ],
   providers: [CartService,LogInComponent,
     {

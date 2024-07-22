@@ -1,6 +1,6 @@
-const db = require('../util/database');
+import db from '../util/database.js';
 
-module.exports = class Instructor {
+export default class Instructor {
     constructor(firstName, lastName, email, dni, salary){
         this.firstName = firstName;
         this.lastName = lastName;

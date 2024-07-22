@@ -1,10 +1,27 @@
-exports.get404 = (req, res, next) => {
+// exports.get404 = (req, res, next) => {
+//     const error = new Error("Not found");
+//     error.statusCode = 404;
+//     next(error);
+// }
+
+// exports.get500 = (error, req, res, next) => {
+//     const data = error.data;
+//     res.status(error.statusCode || 500);
+//     res.json({
+//         error: {
+//             message: error.message,
+//             data: data,
+//         },
+//     })
+// }
+
+const get404 = (req, res, next) => {
     const error = new Error("Not found");
     error.statusCode = 404;
     next(error);
 }
 
-exports.get500 = (error, req, res, next) => {
+const get500 = (error, req, res, next) => {
     const data = error.data;
     res.status(error.statusCode || 500);
     res.json({
@@ -12,5 +29,7 @@ exports.get500 = (error, req, res, next) => {
             message: error.message,
             data: data,
         },
-    })
+    });
 }
+
+export { get404, get500 };

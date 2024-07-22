@@ -19,7 +19,8 @@ import { ActivatedRoute } from '@angular/router';
 export class ProductListComponent implements OnInit{
   products$!: Observable<Product[]>;
   filteredProducts$!: Observable<Product[]>;
-  userId!: Pick<User, "id">;
+  // userId!: Pick<User, "id">;
+  userId!: number;
   apiUrl: string = 'http://localhost:3000/';
 
   constructor(private cartService: CartService, private productService: ProductService, private authService: AuthService, private route: ActivatedRoute) { }
@@ -59,7 +60,7 @@ export class ProductListComponent implements OnInit{
   
   share(product : any) {
     window.alert('The product has been shared!');
-    this.cartService.addToCart(product);
+    this.cartService.addToCart(product,1);
   }
 
   createProduct(): void {

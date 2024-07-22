@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent {
-  items = this.cartService.getCartItems(); //obtener items del carrito
+export class CartComponent implements OnInit {
+  items: any[] = [];
   apiUrl = 'http://localhost:3000/';
 
   checkoutForm = this.formBuilder.group({
@@ -18,17 +20,29 @@ export class CartComponent {
 
   constructor(
     private cartService: CartService,
-    private formBuilder: FormBuilder
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {}
 
-  getCartService(){
+  ngOnInit(): void {
+    this.cartService.cartItems$.subscribe(items => {
+      this.items = items;
+    });
+    this.cartService.loadCart();
+  }
+
+  getCartService() {
     return this.cartService;
   }
 
   onSubmit(): void {
-    // Process checkout data here / Procesar datos del checkout
-    this.items = this.cartService.clearCart();
+    this.cartService.clearCart();
     console.warn('Your order has been submitted', this.checkoutForm.value);
     this.checkoutForm.reset();
+  }
+
+  removeItem(index: number) {
+    this.cartService.removeItem(index);
   }
 }

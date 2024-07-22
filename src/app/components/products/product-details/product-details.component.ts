@@ -73,6 +73,6 @@ export class ProductDetailsComponent implements OnInit {
 
   addToCart(product: Product, quantity: number): void {
     console.log(`Added ${quantity} of ${product.title} to cart.`);
-    this.cartService.addToCartQuatity(product, quantity);
+    this.cartService.addToCart(product, quantity);
   }
 }
