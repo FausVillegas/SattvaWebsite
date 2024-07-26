@@ -1,17 +1,13 @@
 import { Router } from 'express';
 const router = Router();
-import { getAllInstructors, addInstructor, deleteInstructor } from '../controllers/instructors.js';
-
-// import express from 'express';
-// const router = express.Router();
+import { getAllInstructors, addInstructor, deleteInstructor, updateInstructor } from '../controllers/instructors.js';
 
 router.get('/', getAllInstructors);
 
 router.post('/', addInstructor);
 
-// router.put('/:id', instructorsController.upload);
+router.put('/', updateInstructor);
 
 router.delete('/:id', deleteInstructor);
 
 export default router;
-// export default router;

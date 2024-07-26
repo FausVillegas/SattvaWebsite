@@ -1,23 +1,56 @@
 .registrations-container {
-    padding: 20px;
-  }
-  
-  .registration-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .registration-card img {
-    max-width: 100%;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
-  
-  h2 {
-    color: #ff4081;
-    margin-bottom: 20px;
-  }
-  
+  padding: 20px;
+}
+
+.events-section, .classes-section {
+  padding: 20px;
+  margin-bottom: 40px;
+  border-radius: 8px;
+}
+
+.events-section {
+  background-color: #e0f7fa;
+}
+
+.classes-section {
+  background-color: #ffecb3;
+}
+
+.registration-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registration-card img {
+  max-width: 100%;
+  width: 20rem;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.datetime {
+  font-weight: bold;
+}
+
+h2 {
+  color: #096366;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
+}
+
+h3 {
+  font-weight: bold;
+}
+
+.payment-status-false {
+  color: #b00000;
+}
+
+.payment-status-true {
+  color: #0fb000;
+}

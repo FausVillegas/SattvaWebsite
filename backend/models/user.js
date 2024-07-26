@@ -40,6 +40,9 @@ export default class User {
         );
     }
     
+    static findById(id) {
+        return db.execute('SELECT * FROM users WHERE id = ?',[id]);
+    }
 
     static find(email){
         return db.execute('SELECT * FROM users WHERE email = ?', [email]);

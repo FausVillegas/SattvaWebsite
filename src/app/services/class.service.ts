@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { first, Observable } from 'rxjs';
-import { Class } from '../models/Class';
+import { SattvaClass } from '../models/Class';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from './error-handler.service';
 
@@ -17,45 +17,41 @@ export class ClassService {
 
   constructor(private http: HttpClient, private errorHandlerService: ErrorHandlerService) {}
 
-  getClasses(): Observable<Class[]> {
+  getClasses(): Observable<SattvaClass[]> {
     return this.http
-    .get<Class[]>(this.apiUrl,{ responseType: "json" })
+    .get<SattvaClass[]>(this.apiUrl,{ responseType: "json" })
     .pipe(
       catchError(error => {
-        return this.errorHandlerService.handleError<Class[]>("getClasses", [])(error);
+        return this.errorHandlerService.handleError<SattvaClass[]>("getClasses", [])(error);
       }),
     );
   }
 
-  // addClass(classData: any): Observable<Class> {
-  //   return this.http.post<Class>(this.apiUrl, classData)
-  //   .pipe(
-  //         catchError(error => {
-  //           return this.errorHandlerService.handleError<Class>("addClass")(error);
-  //         }),
-  //       );
-  // }  
-  addClass(classData: any): Observable<Class> {
-    return this.http.post<Class>(this.apiUrl, classData).pipe(
+  addClass(classData: any): Observable<SattvaClass> {
+    return this.http.post<SattvaClass>(this.apiUrl, classData).pipe(
       catchError(error => {
-        return this.errorHandlerService.handleError<Class>("addClass")(error);
+        return this.errorHandlerService.handleError<SattvaClass>("addClass")(error);
       })
     );
   }
   
 
-  updateClass(id: number, classData: Class): Observable<Class> {
-    return this.http.put<Class>(`${this.apiUrl}/${id}`, classData);
+  updateClass(id: number, classData: SattvaClass): Observable<SattvaClass> {
+    return this.http.put<SattvaClass>(`${this.apiUrl}/${id}`, classData);
   }
 
-  deleteClass(classId: Pick<Class, "id">): Observable<{}> {
+  deleteClass(classId: Pick<SattvaClass, "id">): Observable<{}> {
     return this.http
-    .delete<Class>(`${this.apiUrl}/${classId.id}`, this.httpOptions)
+    .delete<SattvaClass>(`${this.apiUrl}/${classId.id}`, this.httpOptions)
     .pipe(
       first(),
       catchError(error => {
-        return this.errorHandlerService.handleError<Class>("deleteClass")(error);
+        return this.errorHandlerService.handleError<SattvaClass>("deleteClass")(error);
       }),
     )
+  }
+
+  getClassById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 }

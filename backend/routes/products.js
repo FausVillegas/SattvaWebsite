@@ -1,12 +1,9 @@
 import { Router } from 'express';
 const router = Router();
 import { body } from 'express-validator';
-import { fetchAll, getProductById, postProduct, deleteProduct } from '../controllers/products.js';
+import { fetchAll, getProductById, postProduct, deleteProduct, createPreference, orderWebhook } from '../controllers/products.js';
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
-
-// import express from 'express';
-// const router = express.Router();
 
 router.get('/', fetchAll);
 
@@ -27,10 +24,12 @@ router.post(
 );
 
 router.delete(
-    // '/products/:id', productsController.deleteProduct
     '/:id', isAuthenticated, isAdmin, deleteProduct
 );
 
+router.post('/create-preference', createPreference);
+
+router.post("/order/webhook", orderWebhook);  
+
 export default router;
-// export default router;
 

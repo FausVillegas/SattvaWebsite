@@ -116,9 +116,12 @@ import classesRoutes from './routes/classes.js';
 import eventsRoutes from './routes/events.js';
 import instructorsRoutes from './routes/instructors.js';
 import paymentRoutes from './routes/payment.js';
+import cartRoutes from './routes/cart.js';
 import * as errorController from './controllers/error.js';
 import { title } from 'process';
 import db from './util/database.js';
+import SattvaEvent from './models/event.js';
+import SattvaClass from './models/class.js';
 
 dotenv.config();
 
@@ -149,65 +152,26 @@ app.use('/classes', classesRoutes);
 app.use('/events', eventsRoutes);
 app.use('/instructors', instructorsRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/cart',cartRoutes);
 
-app.post("/cart", async (req, res) => {
-    const { userId, productId, quantity } = req.body;
+app.get('/is-enrolled', async (req, res) => {
+    const { userId, classEventId, activityType } = req.query;
     try {
-        // const connection = await db.getConnection();
-        // await connection.beginTransaction();
-        
-        const [existingItem] = await db.query(
-            `SELECT quantity FROM CartItems WHERE user_id = ? AND product_id = ?`, 
-            [userId, productId]
-        );
-
-        if (existingItem.length > 0) {
-            await db.query(
-                `UPDATE CartItems SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?`,
-                [quantity, userId, productId]
-            );
+        let isEnrolled = false;
+        if (activityType === 'event') {
+            isEnrolled = await SattvaEvent.isUserEnrolled(classEventId, userId);
         } else {
-            await db.query(
-                `INSERT INTO CartItems (user_id, product_id, quantity) VALUES (?, ?, ?)`,
-                [userId, productId, quantity]
-            );
+            isEnrolled = await SattvaClass.isUserEnrolled(classEventId, userId);
         }
-
-        res.status(200).json({ message: "Item added to cart" });
+        if(isEnrolled)
+            res.json('Ya estás inscrito en esta actividad.');
+        else
+            res.json('');
     } catch (error) {
-        if (connection) await connection.rollback();
-        res.status(500).json({ error: "Error adding item to cart" });
+        res.status(500).json({ error: 'Error al verificar la inscripción' });
     }
 });
 
-
-app.get("/cart/:userId", async (req, res) => {
-    const userId = req.params.userId;
-    try {
-        const [cartItems] = await db.query(
-            `SELECT ci.product_id, ci.quantity, title, sale_price, image_url 
-             FROM CartItems ci
-             JOIN Products p ON ci.product_id = p.id
-             WHERE ci.user_id = ?`, [userId]
-        );
-        res.status(200).json(cartItems);
-    } catch (error) {
-        res.status(500).json({ error: "Error fetching cart items" });
-    }
-});
-
-app.delete("/cart/:userId/:productId", async (req, res) => {
-    const { userId, productId } = req.params;
-    try {
-        await db.query(
-            `DELETE FROM CartItems WHERE user_id = ? AND product_id = ?`, 
-            [userId, productId]
-        );
-        res.status(200).json({ message: "Item removed from cart" });
-    } catch (error) {
-        res.status(500).json({ error: "Error removing item from cart" });
-    }
-});
 
 
 app.use(errorController.get404);

@@ -17,12 +17,11 @@ export class InstructorService {
 
   constructor(private http: HttpClient, private errorHandlerService: ErrorHandlerService) {}
 
-  getInstructors(): Observable<Instructor[]> {
-    return this.http
-    .get<Instructor[]>(this.apiUrl,{ responseType: "json" })
+  getInstructors(): Observable<any> {
+    return this.http.get<any>(this.apiUrl)
     .pipe(
       catchError(error => {
-        return this.errorHandlerService.handleError<Instructor[]>("getInstructors", [])(error);
+        return this.errorHandlerService.handleError<any>("getInstructors", [])(error);
       }),
     );
   }
@@ -36,13 +35,17 @@ export class InstructorService {
         );
   }  
 
-  updateInstructor(id: number, instructor: Instructor): Observable<Instructor> {
-    return this.http.put<Instructor>(`${this.apiUrl}/${id}`, instructor);
+  // updateInstructor(id: number, instructor: Instructor): Observable<Instructor> {
+  //   return this.http.put<Instructor>(`${this.apiUrl}/${id}`, instructor);
+  // }
+
+  updateInstructor(instructor: Instructor): Observable<Instructor> {
+    return this.http.put<Instructor>(`${this.apiUrl}`, instructor);
   }
 
-  deleteClass(classId: Pick<Instructor, "id">): Observable<{}> {
+  deleteInstructor(instructorId: number): Observable<{}> {
     return this.http
-    .delete<Instructor>(`${this.apiUrl}/${classId.id}`, this.httpOptions)
+    .delete<Instructor>(`${this.apiUrl}/${instructorId}`, this.httpOptions)
     .pipe(
       first(),
       catchError(error => {

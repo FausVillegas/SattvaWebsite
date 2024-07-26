@@ -1,0 +1,59 @@
+<form (ngSubmit)="onSubmit()">
+    <label for="firstName">Nombre:</label>
+    <input type="text" id="firstName" [(ngModel)]="newInstructor.firstName" name="firstName" required>
+    
+    <label for="lastName">Apellido:</label>
+    <input type="text" id="lastName" [(ngModel)]="newInstructor.lastName" name="lastName" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="newInstructor.email" name="email" required>
+    
+    <label for="dni">DNI:</label>
+    <input type="text" id="dni" [(ngModel)]="newInstructor.dni" name="dni" required>
+    
+    <label for="salary">Salario:</label>
+    <input type="number" id="salary" [(ngModel)]="newInstructor.salary" name="salary" required>
+  
+    <button type="submit">Agregar Instructor</button>
+  </form>
+
+  <div class="instructor-list">
+    <div class="instructor-card" *ngFor="let instructor of instructors">
+      <p class="instructor-info">
+        <span class="instructor-name">{{ instructor.first_name }} {{ instructor.last_name }}</span>
+        <span class="instructor-email"> Email: {{ instructor.email }}</span>
+        <span class="instructor-dni"> DNI: {{ instructor.dni }}</span>
+        <span class="instructor-salary"> Sueldo: {{ instructor.salary }}</span>
+      </p>
+      <div class="instructor-actions">
+        <button class="btn-delete" (click)="deleteInstructor(instructor.id)">Eliminar</button>
+        <button class="btn-edit" (click)="editInstructor(instructor)">Editar</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="editingInstructor">
+    <h2>Editar Instructor</h2>
+    <form (ngSubmit)="sendEditedInstructor()">
+      <label for="firstName">Nombre:</label>
+      <input type="text" id="firstName" [(ngModel)]="editingInstructor.first_name" name="firstName" required>
+      
+      <label for="lastName">Apellido:</label>
+      <input type="text" id="lastName" [(ngModel)]="editingInstructor.last_name" name="lastName" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" id="email" [(ngModel)]="editingInstructor.email" name="email" required>
+      
+      <label for="dni">DNI:</label>
+      <input type="text" id="dni" [(ngModel)]="editingInstructor.dni" name="dni" required>
+      
+      <label for="salary">Salario:</label>
+      <input type="number" id="salary" [(ngModel)]="editingInstructor.salary" name="salary" required>
+      
+      <button type="submit">Guardar Cambios</button>
+      <button type="button" (click)="cancelEdit()">Cancelar</button>
+    </form>
+  </div>
+  
+  
+  

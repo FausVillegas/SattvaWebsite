@@ -1,4 +1,4 @@
-export interface Class {
+export interface SattvaClass {
     id: number;
     title: string;
     description: string;

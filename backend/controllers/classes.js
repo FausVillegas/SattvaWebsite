@@ -23,7 +23,7 @@ export async function addClass(req, res, next) {
 
     const { title, description, instructor_id, monthlyFee, schedules } = req.body;
     
-    // imageUrl = null;
+    let imageUrl = null;
     if(req.file)
         imageUrl = req.file.path;
 
@@ -51,6 +51,9 @@ export async function addClass(req, res, next) {
         res.status(201).json({ message: 'The class was added', class: newClass })
     } catch (err) {
         if (!err.statusCode) {err.statusCode = 500;}
+        if (existsSync(imageUrl)) {
+            unlinkSync(imageUrl);
+        }
         next(err);
     }
 }
@@ -106,3 +109,69 @@ export async function deleteClass(req, res, next) {
         next(err);
     }
 }
+
+export async function getClassById(req, res) {
+      try {
+          const [CD] = await SattvaClass.findById(req.params.id);
+          const CS = await SattvaClass.findClassSchedules(req.params.id);
+          const classSchedules = CS[0];
+          
+          if (CD.length === 0) {
+              throw new Error(`No se encontró ningúna clase con el id ${req.params.id}`);
+          }
+          const classData = CD[0];
+          const data = {classData,classSchedules};
+          res.status(200).json(data);
+      } catch (err) {
+          if (!err.statusCode) {err.statusCode = 500;}
+          console.error(err);
+          next(err);
+      }
+  }
+
+  export async function updateClass(req, res) {
+    const classId = req.body.id;
+    const updatedData = req.body;
+    // console.log("Actualizando datos class "+classId + " " +updatedData.title, updatedData.description, updatedData.monthly_fee, updatedData.instructor_id);
+    try {
+      await SattvaClass.update(updatedData, classId);
+      console.log("SCHEDULES ------------"+updatedData.schedules);
+    //   await SattvaClass.updateSchedules(updatedData.schedules, classId);
+
+
+        console.log("IIIDDD"+classId);
+        const [existingSchedules] = await SattvaClass.findClassSchedules(classId);
+        const newSchedules = updatedData.schedules;
+
+        function areSchedulesEqual(schedule1, schedule2) {
+            return schedule1.day_of_week === schedule2.day_of_week && schedule1.time === schedule2.time;
+          }
+          
+          const schedulesToDelete = existingSchedules.filter(existingSchedule =>
+            !newSchedules.some(newSchedule => areSchedulesEqual(newSchedule, existingSchedule))
+          );
+          
+          const schedulesToAdd = newSchedules.filter(newSchedule =>
+            !existingSchedules.some(existingSchedule => areSchedulesEqual(newSchedule, existingSchedule))
+          );
+        
+        for (const schedule of schedulesToDelete) {
+            console.log("Borrando schedule: "+schedule.id);
+            await SattvaClass.deleteSchedule(schedule.id);
+        }
+
+        for (const schedule of schedulesToAdd) {
+            const [result] = await SattvaClass.saveSchedule(schedule);
+            const scheduleId = result.insertId;
+            console.log("Guardando schedule: "+scheduleId+" "+schedule.day_of_week+schedule.time);
+            await SattvaClass.saveClassSchedule(classId,scheduleId);    
+        }
+
+      res.status(200).json({ message: 'Clase actualizada correctamente' });
+    } catch (error) {
+        if (!error.statusCode) {error.statusCode = 500;}
+        console.error(error);
+      res.status(500).json({ error: 'Error al actualizar la clase' });
+    }
+}
+ 

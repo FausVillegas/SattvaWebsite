@@ -19,9 +19,9 @@ router.post("/create-preference", async (req,res) => {
                 }
             ],
             back_urls: {
-                success: "https://www.youtube.com/",
-                failure: "https://www.youtube.com/",
-                pending: "https://www.youtube.com/",
+                success: "https://www.google.com/",
+                failure: "https://www.google.com/",
+                pending: "https://www.google.com/",
             },
             auto_return: "approved",
             metadata: {
@@ -29,7 +29,7 @@ router.post("/create-preference", async (req,res) => {
                 classEventId: req.body.classEventId, // Get event ID from request body
                 activityType: req.body.activityType 
             },
-            notification_url: "https://fc7d-181-170-144-157.ngrok-free.app/payment/webhook"
+            notification_url: "https://fc47-181-170-144-157.ngrok-free.app/payment/webhook"
         }
 
         const preference = new Preference(client);
@@ -46,23 +46,6 @@ router.post("/create-preference", async (req,res) => {
 });
 
 router.post("/webhook", async (req, res) => {
-    // try {
-    //     const payment = req.body;
-    //     console.log(payment.metadata);
-    //     if (payment.type === 'payment' && payment.data.status === 'approved') {
-    //         const { userId, classEventId, activityType } = payment.data.metadata;
-
-    //         if(activityType === 'event')
-    //             await SattvaEvent.registerForEvent(classEventId, userId);
-    //         else
-    //             await SattvaClass.registerForClass(classEventId, userId);
-    //     }
-
-    //     res.status(200).send('OK');
-    // } catch (error) {
-    //     res.status(500).send('Error processing webhook');
-    // }
-
     const paymentId = req.query.id;
     try {
         const respose = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -88,16 +71,5 @@ router.post("/webhook", async (req, res) => {
         res.sendStatus(500);
     }
 });
-
-// import { Router } from 'express';
-// import { createOrder } from '../controllers/payment.js';
-
-// const router = Router();
-
-// router.get('/create-order',createOrder)
-
-// router.get('/success', (req, res) => res.send('success'))
-
-// router.get('/webhook', (req, res) => res.send('webhook'))
 
 export default router;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { first, Observable } from 'rxjs';
-import { Event } from '../models/Event';
+import { SattvaEvent } from '../models/Event';
 import { catchError } from 'rxjs';
 import { ErrorHandlerService } from './error-handler.service';
 import { AuthService } from './auth.service';
@@ -19,40 +19,40 @@ export class EventService {
 
   constructor(private http: HttpClient, private errorHandlerService: ErrorHandlerService, private authService: AuthService) {}
 
-  getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(this.apiUrl,{ responseType: "json" })
+  getEvents(): Observable<SattvaEvent[]> {
+    return this.http.get<SattvaEvent[]>(this.apiUrl,{ responseType: "json" })
     .pipe(
       catchError(error => {
-        return this.errorHandlerService.handleError<Event[]>("getEvents", [])(error);
+        return this.errorHandlerService.handleError<SattvaEvent[]>("getEvents", [])(error);
       }),
     );
   }
 
-  addEvent(eventData: any): Observable<Event> {
-    return this.http.post<Event>(this.apiUrl, eventData)
+  addEvent(eventData: any): Observable<SattvaEvent> {
+    return this.http.post<SattvaEvent>(this.apiUrl, eventData)
     .pipe(
       catchError(error => {
-        return this.errorHandlerService.handleError<Event>("addEvent")(error);
+        return this.errorHandlerService.handleError<SattvaEvent>("addEvent")(error);
       }),
     );
   }
 
-  updateEvent(id: number, event: Event): Observable<Event> {
-    return this.http.put<Event>(`${this.apiUrl}/${id}`, event);
+  updateEvent(id: number, eventData: SattvaEvent): Observable<SattvaEvent> {
+    return this.http.put<SattvaEvent>(`${this.apiUrl}/${id}`, eventData);
   }
 
-  deleteEvent(eventId: Pick<Event, "id">): Observable<{}> {
+  deleteEvent(eventId: Pick<SattvaEvent, "id">): Observable<{}> {
     return this.http
-    .delete<Event>(`${this.apiUrl}/${eventId.id}`, this.httpOptions)
+    .delete<SattvaEvent>(`${this.apiUrl}/${eventId.id}`, this.httpOptions)
     .pipe(
       first(),
       catchError(error => {
-        return this.errorHandlerService.handleError<Event>("deleteEvent")(error);
+        return this.errorHandlerService.handleError<SattvaEvent>("deleteEvent")(error);
       }),
     )
   }
 
-  registerAndPay(event: Event): Observable<any> {
+  registerAndPay(event: SattvaEvent): Observable<any> {
     const userId = this.authService.getUserId();
     return this.http.post<any>(`${this.apiUrl}/events/${event.id}/register-pay`, { userId, price: event.price, title: event.title });
   }  
@@ -62,8 +62,12 @@ export class EventService {
     return this.http.post<any>(`${this.apiUrl}/events/${eventId}/register`, { userId }).pipe(
       first(),
       catchError(error => {
-        return this.errorHandlerService.handleError<Event>("registerForEvent")(error);
+        return this.errorHandlerService.handleError<SattvaEvent>("registerForEvent")(error);
       }),
     );
-  }  
+  }
+  
+  getEventById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
 }

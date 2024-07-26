@@ -1,4 +1,4 @@
-<div class="event-details-container">
+   <div class="event-details-container">
     <mat-card class="event-card">
       <img mat-card-image *ngIf="apiUrl+data.imageUrl" [src]="apiUrl + data.imageUrl" alt="Image">
       <mat-card-content>
@@ -7,9 +7,10 @@
         <p class="price">${{price}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button id="checkout-btn" (click)="createPreference()">Inscribirse y Pagar</button>
+        <button mat-raised-button id="checkout-btn" (click)="createPreference()" [disabled]="message!=''">Pagar e Inscribirse</button>
       </mat-card-actions>
       <div id="wallet_container"></div>
+      <div *ngIf="message" class="message">{{ message }}</div> 
     </mat-card>
   </div>
   

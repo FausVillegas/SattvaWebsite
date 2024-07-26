@@ -29,6 +29,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { UserRegistrationsComponent } from './components/user-registrations/user-registrations.component';
+import { AddInstructorComponent } from './components/add-instructor/add-instructor.component';
+import { EditClassComponent } from './components/class-event/edit-class/edit-class.component';
+import { EditEventComponent } from './components/class-event/edit-event/edit-event.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,9 @@ import { UserRegistrationsComponent } from './components/user-registrations/user
     EventAddComponent,
     ClassEventDetailsComponent,
     UserRegistrationsComponent,
+    AddInstructorComponent,
+    EditClassComponent,
+    EditEventComponent,
   ],
   imports: [
     MatCardModule,
@@ -60,6 +66,7 @@ import { UserRegistrationsComponent } from './components/user-registrations/user
       // { path: '', redirectTo: '/products', pathMatch: 'full'},
       { path: '', component: HomeComponent},
       { path: 'my-registrations', component: UserRegistrationsComponent },
+      { path: 'instructors', component: AddInstructorComponent, canActivate: [AdminGuardService]  },
       { path: 'profile', component: ProfileComponent},
       { path: 'products', component: ProductListComponent },
       { path: 'product/:id', component: ProductDetailsComponent },
@@ -67,8 +74,10 @@ import { UserRegistrationsComponent } from './components/user-registrations/user
       { path: 'login', component: LogInComponent },
       { path: 'addProduct', component: AddProductComponent, canActivate: [AdminGuardService] },
       { path: 'reset-password', component: ResetPasswordComponent },
-      { path: 'addClass', component: ClassAddComponent },
-      { path: 'addEvent', component: EventAddComponent },
+      { path: 'addClass', component: ClassAddComponent, canActivate: [AdminGuardService] },
+      { path: 'addEvent', component: EventAddComponent, canActivate: [AdminGuardService] },
+      { path: 'edit-class/:id', component: EditClassComponent, canActivate: [AdminGuardService] },
+      { path: 'edit-event/:id', component: EditEventComponent, canActivate: [AdminGuardService] },
       // { path: 'shipping', component: ShippingComponent },
     ]),
     BrowserAnimationsModule,

@@ -27,6 +27,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { InstructorService } from 'src/app/services/instructor.service';
 import { Instructor } from 'src/app/models/Instructor';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-class-add',
@@ -38,8 +39,15 @@ export class ClassAddComponent implements OnInit{
   selectedFile: File | undefined;
   instructors: Instructor[] = [];
   days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  isAdmin = false;
 
-  constructor(private classService: ClassService, private http: HttpClient, private router: Router, private instructorService: InstructorService) {}
+  constructor(private classService: ClassService, private http: HttpClient, private router: Router, private instructorService: InstructorService, private authService: AuthService) {}
+
+  navigateToAddInstructor() {
+    if (this.isAdmin) {
+      this.router.navigate(['/instructors']);
+    }
+  }
 
   onFileChange(event: any) {
     this.selectedFile = event.target.files[0];
@@ -49,6 +57,7 @@ export class ClassAddComponent implements OnInit{
     this.instructorService.getInstructors().subscribe(data => {
       this.instructors = data;
     });
+    this.isAdmin = this.authService.isAdmin();
   }
 
   addSchedule() {

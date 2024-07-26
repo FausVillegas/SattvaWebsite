@@ -1,0 +1,50 @@
+<div class="edit-event-form">
+    <h2>Editar Evento</h2>
+    <form (ngSubmit)="onSave()">
+      <div class="form-group">
+        <label for="title">Título:</label>
+        <input id="title" [(ngModel)]="eventData.title" name="title" required class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Descripción:</label>
+        <textarea id="description" [(ngModel)]="eventData.description" name="description" required class="form-control"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="price">Precio:</label>
+        <input id="price" type="number" [(ngModel)]="eventData.price" name="price" required class="form-control">
+      </div>
+  
+      <div class="form-group">
+        <label for="instructor">Instructor:</label>
+        <select id="instructor" [(ngModel)]="eventData.instructor_id" name="instructor" class="form-control">
+          <option *ngFor="let instructor of instructors" [value]="instructor.id">
+            {{ instructor.first_name }} {{ instructor.last_name }}
+          </option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="dateTime">Fecha y hora:</label> <p>Actual: {{eventData.event_datetime}}</p>
+        <!-- <input id="dateTime" type="datetime-local" [(ngModel)]="eventData.event_datetime" name="dateTime" required class="form-control"> -->
+        <input
+        id="dateTime"
+        type="datetime-local"
+        (change)="onDateTimeChange($event)"
+        name="dateTime"
+        required
+        class="form-control"
+        />
+      </div>
+  
+      <!-- <div class="form-group">
+        <label for="imageUrl">Imagen:</label>
+        <input id="imageUrl" type="file" [(ngModel)]="eventData.imageUrl" name="imageUrl" class="form-control">
+      </div> -->
+  
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+    </form>
+  </div>
+  

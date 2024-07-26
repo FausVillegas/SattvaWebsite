@@ -23,5 +23,6 @@
   <div class="total">
     <p>Total: {{ getCartService().getTotalPrice() | currency:'$':true }}</p>
   </div>
-  <button (click)="onSubmit()">Continuar compra</button>
+  <button (click)="createPreference()">Continuar compra</button>
+  <div id="wallet_container"></div>
 </div>

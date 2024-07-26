@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventService } from '../../services/event.service';
-import { Event } from 'src/app/models/Event';
+import { SattvaEvent } from 'src/app/models/Event';
 import { Instructor } from 'src/app/models/Instructor';
 import { InstructorService } from 'src/app/services/instructor.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-event-add',
@@ -13,9 +14,16 @@ import { InstructorService } from 'src/app/services/instructor.service';
 export class EventAddComponent implements OnInit{
   newEvent = { title: '', description: '', imageUrl: '', dateTime: new Date(), instructor_id: 0, price: 0};
   selectedFile: File | undefined;
-  instructors: Instructor[] = [];
+  instructors: any[] = [];
+  isAdmin = false;
 
-  constructor(private eventService: EventService, private router: Router, private instructorService: InstructorService) { }
+  constructor(private eventService: EventService, private router: Router, private instructorService: InstructorService, private authService: AuthService) { }
+
+  navigateToAddInstructor() {
+    if (this.isAdmin) {
+      this.router.navigate(['/instructors']);
+    }
+  }
 
   onFileChange(event: any) {
     this.selectedFile = event.target.files[0];
@@ -25,6 +33,7 @@ export class EventAddComponent implements OnInit{
     this.instructorService.getInstructors().subscribe(data => {
       this.instructors = data;
     });
+    this.isAdmin = this.authService.isAdmin();
   }
 
   addEvent(): void {

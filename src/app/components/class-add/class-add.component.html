@@ -16,7 +16,8 @@
           {{ instructor.first_name+" "+instructor.last_name+" "+instructor.email+" DNI"+instructor.dni }}
         </option>
       </select>
-
+      <button (click)="navigateToAddInstructor()" *ngIf="isAdmin">Agregar Instructor</button>
+      
       <label for="imageUrl">Imagen</label>
       <input id="imageUrl" type="file" (change)="onFileChange($event)" name="imageUrl" required>
   

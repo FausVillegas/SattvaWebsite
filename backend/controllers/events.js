@@ -38,6 +38,9 @@ export async function addEvent(req, res, next) {
         res.status(201).json({ message: 'The event was added', class: newEvent })
     } catch (err) {
         if (!err.statusCode) { err.statusCode = 500; }
+        if (existsSync(imageUrl)) {
+            unlinkSync(imageUrl);
+        }
         next(err);
     }
 }
@@ -64,54 +67,33 @@ export async function deleteEvent(req, res, next) {
     }
 }
 
-export async function registerForEvent(req, res, next) {
-    const { eventId } = req.params;
-    const { userId } = req.body;
-
+export async function getEventById(req, res) {
     try {
-        await SattvaEvent.registerForEvent(eventId, userId);
-        res.status(201).json({ message: 'Inscripción exitosa' });
+        const eventData = (await SattvaEvent.findById(req.params.id))[0];
+        
+        if (!eventData) {
+            throw new Error(`No se encontró ningún evento con el id ${req.params.id}`);
+        }
+
+        var localDate = eventData[0].event_datetime.toString();
+        eventData[0].event_datetime = localDate;
+        // console.log(eventData[0].event_datetime);
+        res.status(200).json(eventData[0]);
     } catch (err) {
-        if (!err.statusCode) { err.statusCode = 500; }
-        next(err);
+        if (!err.statusCode) {err.statusCode = 500;}
+        console.error(err);
     }
 }
 
-// import mercadopago from 'mercadopago';
-
-// // // Configura MercadoPago con tu Access Token
-// // mercadopago.configure({
-// //   access_token: process.env.MP_ACCESS_TOKEN
-// // });
-
-// mercadopago.configurations.setAccessToken(process.env.MP_ACCESS_TOKEN);
-
-// export async function registerAndPay(req, res, next) {
-//   const { eventId } = req.params;
-//   const { userId, price, title } = req.body;
-
-//   try {
-//     const preference = {
-//       items: [{
-//         title: title,
-//         unit_price: parseFloat(price),
-//         quantity: 1,
-//         currency_id: 'ARS'
-//       }],
-//       back_urls: {
-//         success: 'http://localhost:4200/success',
-//         failure: 'http://localhost:4200/failure',
-//         pending: 'http://localhost:4200/pending'
-//       },
-//       auto_return: 'approved',
-//       external_reference: `${eventId}_${userId}`
-//     };
-
-//     const response = await preferences.create(preference);
-//     res.status(201).json({ paymentUrl: response.body.init_point });
-//   } catch (err) {
-//     if (!err.statusCode) { err.statusCode = 500; }
-//     next(err);
-//   }
-// }
-
+export async function updateEvent(req, res) {
+    const eventId = req.body.id;
+    const updatedData = req.body;
+    try {
+        const [result] = await SattvaEvent.update(updatedData, eventId);
+        res.status(200).json({ message: 'Clase actualizada correctamente: '+result });
+    } catch (err) {
+        if (!err.statusCode) {err.statusCode = 500;}
+        console.error(err);
+        next(err);
+    }
+}

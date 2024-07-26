@@ -38,7 +38,7 @@ body {
 }
 
 .imgTitle img{
-    width: 80vw;
+    width: 60vw;
 }
 
 #inicio p{
@@ -70,6 +70,10 @@ section h2 {
     width: 300px;
     text-align: center;
     margin-bottom: 2rem;
+  }
+
+  .containerClassEvent strong {
+    color: #cb0000;
   }
   
   .containerClassEvent:hover {
@@ -110,3 +114,6 @@ section h2 {
     background: #006478;
   }
   
+  .instructor-btn {
+    margin-top: 4rem;
+  }

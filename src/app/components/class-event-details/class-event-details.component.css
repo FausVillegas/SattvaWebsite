@@ -1,9 +1,14 @@
+
 .event-details-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   background-color: rgb(255, 237, 214);
+}
+
+.event-details-container h2 {
+  font-size: 1.5em;
 }
 
 .event-card {

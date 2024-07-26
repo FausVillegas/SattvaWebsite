@@ -1,0 +1,51 @@
+<div class="edit-class-form">
+    <h2>Editar Clase</h2>
+    <form (ngSubmit)="onSave()">
+      <div class="form-group">
+        <label for="title">Título:</label>
+        <input id="title" [(ngModel)]="classData.title" name="title" required class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Descripción:</label>
+        <textarea id="description" [(ngModel)]="classData.description" name="description" required class="form-control"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="monthly_fee">Cuota Mensual:</label>
+        <input id="monthly_fee" type="number" [(ngModel)]="classData.monthly_fee" name="monthly_fee" required class="form-control">
+      </div>
+  
+      <div class="form-group">
+        <label for="instructor">Instructor:</label>
+        <select id="instructor" [(ngModel)]="classData.instructor_id" name="instructor" class="form-control">
+          <option *ngFor="let instructor of instructors" [value]="instructor.id">
+            {{ instructor.first_name }} {{ instructor.last_name }}
+          </option>
+        </select>
+      </div>
+<!--   
+      <div class="form-group">
+        <label for="date">Fecha:</label>
+        <input id="date" type="date" [(ngModel)]="classData.date" name="date" required class="form-control">
+      </div>
+  
+      <div class="form-group">
+        <label for="time">Hora:</label>
+        <input id="time" type="time" [(ngModel)]="classData.time" name="time" required class="form-control">
+      </div> -->
+      <label for="schedules">Horarios</label>
+    <div *ngFor="let schedule of classData.schedules; let i = index">
+      <select [(ngModel)]="schedule.day_of_week" name="day_of_week_{{i}}" required>
+        <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+      </select>
+      <input type="time" [(ngModel)]="schedule.time" name="time_{{i}}" required>
+      <button type="button" (click)="removeSchedule(i)">Eliminar</button>
+    </div>
+    <button type="button" (click)="addSchedule()">Añadir Horario</button>
+  
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+    </form>
+  </div>
+  
