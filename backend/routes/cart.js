@@ -1,4 +1,3 @@
-// SDK de Mercado Pago
 import { Router } from 'express';
 import db from '../util/database.js';
 

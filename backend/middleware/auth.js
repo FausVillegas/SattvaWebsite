@@ -45,7 +45,7 @@ export function isAuthenticated(req, res, next) {
     let decodedToken;
 
     try {
-        decodedToken = verify(token, 'secretfortoken');
+        decodedToken = verify(token, process.env.SECRETFORTOKEN);
     } catch (err) {
         err.statusCode = 500;
         throw err;

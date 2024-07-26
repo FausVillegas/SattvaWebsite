@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
@@ -10,30 +10,29 @@ import { User } from 'src/app/models/User';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit{
   authService = inject(AuthService);
   name: string | undefined;
   phone: string | undefined;
   address: string | undefined;
   email!: string;
-  loggedInUser = sessionStorage.getItem("loggedInUser");
   token = localStorage.getItem("token");
   decodedToken: any;
   isEditing = false;
-  profileForm: FormGroup;
+  profileForm!: FormGroup;
 
-  constructor(private router: Router) {
+  ngOnInit(): void {
     if (this.token) {
       this.decodedToken = jwtDecode(this.token);
       this.name = this.decodedToken.name;
       this.email = this.decodedToken.email;
       this.phone = this.decodedToken.phone;
       this.address = this.decodedToken.address;
-    } else if(this.loggedInUser){
-      this.name = JSON.parse(this.loggedInUser!).name;
-      this.email = JSON.parse(this.loggedInUser!).email;
-      this.phone = JSON.parse(this.loggedInUser!).phone;
-      this.address = JSON.parse(this.loggedInUser!).address;
+    // } else if(this.loggedInUser){
+    //   this.name = JSON.parse(this.loggedInUser!).name;
+    //   this.email = JSON.parse(this.loggedInUser!).email;
+    //   this.phone = JSON.parse(this.loggedInUser!).phone;
+    //   this.address = JSON.parse(this.loggedInUser!).address;
     } else {
       this.name = "Usuario no registrado";
     }
@@ -44,6 +43,8 @@ export class ProfileComponent {
       address: new FormControl("", [Validators.required, Validators.minLength(6)]),
    });
   }
+
+  constructor(private router: Router) {}
 
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
@@ -104,9 +105,9 @@ updateProfile(): void {
 
       if(updatedUser.name)
         this.name = updatedUser.name;
-      else if(updatedUser.phone)
+      if(updatedUser.phone)
         this.phone = updatedUser.phone;
-      else if(updatedUser.address)
+      if(updatedUser.address)
         this.address = updatedUser.address;
 
       // sessionStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
@@ -120,12 +121,13 @@ updateProfile(): void {
         //Codificar el token actualizado y guardarlo en localStorage
         this.token = this.authService.encodeToken(this.decodedToken);
         localStorage.setItem("token", this.token);
-      } else if (this.loggedInUser) {
-        // JSON.parse(this.loggedInUser!).name = this.name;
-        // JSON.parse(this.loggedInUser!).phone = this.phone;
-        // JSON.parse(this.loggedInUser!).address = this.address;
-        sessionStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
       }
+      // } else if (this.loggedInUser) {
+      //   // JSON.parse(this.loggedInUser!).name = this.name;
+      //   // JSON.parse(this.loggedInUser!).phone = this.phone;
+      //   // JSON.parse(this.loggedInUser!).address = this.address;
+      //   localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+      // }
 
       this.isEditing = false;
       this.router.navigate(['/profile']);

@@ -15,8 +15,7 @@ import { ErrorHandlerService } from './error-handler.service';
 })
 export class AuthService {
   private url = "http://localhost:3000/auth"
-  private secretKey = 'secretfortoken1205';
-  // userId!: Pick<User, "id">;
+  private secretKey = 'secretfortoken12052004';
   userId!: number;
 
   httpOptions: { headers: HttpHeaders } = {
@@ -35,7 +34,7 @@ export class AuthService {
 
   updateProfile(email: string, updatedProfile: any): Observable<any> {
     return this.http
-      .post<any>(`${this.url}/update-profile`, { email, updatedProfile }, this.httpOptions)
+      .put<any>(`${this.url}/update-profile`, { email, updatedProfile }, this.httpOptions)
       .pipe(
         first(),
         catchError(error => {
@@ -57,25 +56,69 @@ export class AuthService {
       );
   }
 
-  login(email: Pick<User,"email">, password: Pick<User,"password">): Observable<{ token: string, userId: Pick<User,"id"> }> {    
-    return this.http
-    .post<{ token: string, userId: Pick<User,"id">, name: string, email: string, role: string }>(`${this.url}/login`, { email, password }, this.httpOptions)
+  // login(email: Pick<User,"email">, password: Pick<User,"password">): Observable<{ token: string, userId: Pick<User,"id"> }> {    
+  //   return this.http
+  //   .post<{ token: string, userId: Pick<User,"id">, name: string, email: string, role: string }>(`${this.url}/login`, { email, password }, this.httpOptions)
+  //     .pipe(
+  //       first(),
+  //       tap((tokenObject: { token: string, userId: Pick<User,"id">, name: string, email: string, role: string }) => {
+  //         this.userId = Number(tokenObject.userId);
+  //         localStorage.setItem("token", tokenObject.token);
+  //         localStorage.setItem("role", tokenObject.role);
+  //         this.router.navigate(['profile']);
+  //       }),
+  //       catchError(this.errorHandlerService.handleError<{ token: string, userId: Pick<User,"id">, role: string }>("login"))
+  //     );
+  // }
+
+  login(email: Pick<User, "email">, password: Pick<User, "password">): Observable<{ token: string, userId: number }> {
+    return this.http.post<{ token: string, userId: number, role: string }>(`${this.url}/login`, { email, password }, this.httpOptions)
       .pipe(
         first(),
-        tap((tokenObject: { token: string, userId: Pick<User,"id">, name: string, email: string, role: string }) => {
-          this.userId = Number(tokenObject.userId);
+        tap((tokenObject) => {
           localStorage.setItem("token", tokenObject.token);
+          localStorage.setItem("userId", tokenObject.userId.toString());
           localStorage.setItem("role", tokenObject.role);
           this.router.navigate(['profile']);
         }),
-        catchError(this.errorHandlerService.handleError<{ token: string, userId: Pick<User,"id">, role: string }>("login"))
+        catchError(this.errorHandlerService.handleError<{ token: string, userId: number, role: string }>("login"))
       );
   }
+
+
+  // googleLogin(token: string): Observable<User> {
+  //   return this.http.post<User>(`${this.url}/google-login`, { token }, this.httpOptions)
+  //       .pipe(
+  //           first(),
+  //           tap(user => {
+  //               localStorage.setItem('loggedInUser', JSON.stringify(user));
+  //               this.userId = user.id;
+  //               console.log("USER"+this.userId);
+  //               this.router.navigate(['profile']);
+  //           }),
+  //           catchError(this.errorHandlerService.handleError<User>("googleLogin"))
+  //       );
+  // }
+  googleLogin(token: string): Observable<{ token: string, user: User }> {
+    return this.http.post<{ token: string, user: User }>(`${this.url}/google-login`, { token }, this.httpOptions)
+        .pipe(
+            first(),
+            tap(response => {
+                localStorage.setItem('token', response.token);
+                localStorage.setItem('userId', response.user.id.toString());
+                localStorage.setItem('role', response.user.role);
+                this.router.navigate(['profile']);
+            }),
+            catchError(this.errorHandlerService.handleError<{ token: string, user: User }>("googleLogin"))
+        );
+}
+
+
 
   sendEmailResetPassword(email: Pick<User, "email">): Observable<any> {
     console.log("Se ejecuta sendEmailResetPassword auth.service.ts: ", email);
     return this.http
-      .post(`${this.url}/reset-password-request`, email, this.httpOptions)
+      .put(`${this.url}/reset-password-request`, email, this.httpOptions)
       .pipe(
         first(),
         catchError(error => {
@@ -87,7 +130,7 @@ export class AuthService {
 
   resetPassword(token: string, newPassword: string): Observable<any> {
     return this.http
-      .post(`${this.url}/reset-password`, { token, newPassword }, this.httpOptions)
+      .put(`${this.url}/reset-password`, { token, newPassword }, this.httpOptions)
         .pipe(
           first(),
           catchError(error => {
@@ -95,56 +138,31 @@ export class AuthService {
             return this.errorHandlerService.handleError<{ email: string }>("resetPassword")(error);
           }),
         );
-  }
-
-
-  googleLogin(token: string): Observable<User> {
-    return this.http.post<User>(`${this.url}/google-login`, { token }, this.httpOptions)
-        .pipe(
-            first(),
-            tap(user => {
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                console.log("USEERRR"+this.userId);
-                this.userId = user.id;
-                console.log("USEERRR"+this.userId);
-                this.router.navigate(['profile']);
-            }),
-            catchError(this.errorHandlerService.handleError<User>("googleLogin"))
-        );
-  }
+      }
 
   logout(): void {
     localStorage.removeItem('role');
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     google.accounts.id.disableAutoSelect();
-    localStorage.removeItem('loggedInUser');
     sessionStorage.removeItem('loggedInUser');
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    return !!(localStorage.getItem('token') || sessionStorage.getItem('loggedInUser'));
+    return !!(localStorage.getItem('token'));
   }
 
   isAdmin(): boolean {
-    const loggedInUser = sessionStorage.getItem("loggedInUser");
-    if(loggedInUser){
-      return JSON.parse(loggedInUser!).role === "admin";
-    } 
     return localStorage.getItem('role') === "admin";
   }
 
   getUserId() {
-    const loggedInUser = localStorage.getItem("loggedInUser");
-    if(loggedInUser) {
-      return JSON.parse(loggedInUser!).id;
-    }
-    return this.userId;
+    return localStorage.getItem('userId');
   }
 
   getUserRegistrations(): Observable<any> {
-    const loggedInUser = localStorage.getItem("loggedInUser")
-    console.log('getUserRegistrations service '+JSON.parse(loggedInUser!).id);
-    return this.http.get(`${this.url}/user-registrations/${JSON.parse(loggedInUser!).id}`);
+    console.log('getUserRegistrations service '+this.getUserId());
+    return this.http.get(`${this.url}/user-registrations/${this.getUserId()}`);
   }
 }

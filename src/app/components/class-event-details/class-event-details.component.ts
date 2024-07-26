@@ -12,7 +12,7 @@ export class ClassEventDetailsComponent implements OnInit {
   apiUrl = "http://localhost:3000/";
   price = null;
   message = '';  // Variable para mostrar mensajes al usuario
-  userId: string;
+  userId: string | null;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private authService: AuthService) {
     this.message = '';

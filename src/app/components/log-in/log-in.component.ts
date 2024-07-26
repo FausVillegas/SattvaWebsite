@@ -51,8 +51,7 @@ export class LogInComponent implements OnInit {
 
    handleGoogleLogin(response: any) {
       if (response) {
-          this.authService.googleLogin(response.credential).subscribe(user => {
-              sessionStorage.setItem("loggedInUser", JSON.stringify(user));
+          this.authService.googleLogin(response.credential).subscribe(data => {
               this.router.navigate(['profile']);
           });
       }
@@ -145,12 +144,29 @@ export class LogInComponent implements OnInit {
    }
  }
  
+   // googleLogin(): void {
+   //    console.log(JSON.parse(sessionStorage.getItem("loggedInUser")!).name);
+   //    this.authService.googleLogin(JSON.parse(sessionStorage.getItem("loggedInUser")!))
+   //       .subscribe();
+   //    this.router.navigate(['profile']);
+   // }
+
    googleLogin(): void {
-      console.log(JSON.parse(sessionStorage.getItem("loggedInUser")!).name);
-      this.authService
-         .googleLogin(JSON.parse(sessionStorage.getItem("loggedInUser")!))
-         .subscribe();
-      this.router.navigate(['profile']);
-   }
+      const token = sessionStorage.getItem("token");
+      if (token) {
+          this.authService.googleLogin(token).subscribe({
+              next: user => {
+                  sessionStorage.setItem("user", JSON.stringify(user));
+                  this.router.navigate(['profile']);
+              },
+              error: err => {
+                  console.error("Login failed", err);
+              }
+          });
+      } else {
+          console.error("No token found in session storage");
+      }
+  }
+   
 
 }

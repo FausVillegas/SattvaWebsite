@@ -5,9 +5,6 @@ import { fetchAll, getProductById, postProduct, deleteProduct, createPreference,
 import { isAuthenticated, isAdmin } from '../middleware/auth.js';
 import upload from '../middleware/upload.js';
 
-// import express from 'express';
-// const router = express.Router();
-
 router.get('/', fetchAll);
 
 router.get('/:id', getProductById);
