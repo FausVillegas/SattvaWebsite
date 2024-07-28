@@ -36,7 +36,7 @@ export class ClassService {
   }
   
 
-  updateClass(id: number, classData: SattvaClass): Observable<SattvaClass> {
+  updateClass(id: number, classData: any): Observable<SattvaClass> {
     return this.http.put<SattvaClass>(`${this.apiUrl}/${id}`, classData);
   }
 

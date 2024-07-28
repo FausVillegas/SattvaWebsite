@@ -42,13 +42,13 @@ export class AddInstructorComponent implements OnInit{
   }
 
   validateForm() {
-    return this.newInstructor.firstName && this.newInstructor.lastName && this.newInstructor.email && this.newInstructor.dni && this.newInstructor.salary;
+    return this.newInstructor.firstName && this.newInstructor.lastName && this.newInstructor.email && this.newInstructor.dni && this.newInstructor.salary > 0;
   }
 
   deleteInstructor(id: number) {
     if (confirm('¿Está seguro de que desea eliminar a este instructor?')) {
       this.instructorService.deleteInstructor(id).subscribe(() => {
-        this.loadInstructors(); // Recargar la lista
+        this.loadInstructors();
       });
     }
   }

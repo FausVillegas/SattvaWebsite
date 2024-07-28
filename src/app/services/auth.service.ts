@@ -1,5 +1,5 @@
 declare var google: any;
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import jwtEncode from 'jwt-encode';
@@ -9,6 +9,8 @@ import { first, catchError, tap } from 'rxjs/operators';
 
 import { User } from '../models/User';
 import { ErrorHandlerService } from './error-handler.service';
+import { jwtDecode } from 'jwt-decode';
+import { Location } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,9 @@ import { ErrorHandlerService } from './error-handler.service';
 export class AuthService {
   private url = "http://localhost:3000/auth"
   private secretKey = 'secretfortoken12052004';
+  token = localStorage.getItem("token");
   userId!: number;
+  decodedToken: any;
 
   httpOptions: { headers: HttpHeaders } = {
     headers: new HttpHeaders({ "Content-Type": "application/json" })
@@ -25,7 +29,8 @@ export class AuthService {
   constructor(
     private http: HttpClient, 
     private errorHandlerService: ErrorHandlerService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   encodeToken(payload: any): string {
@@ -56,64 +61,34 @@ export class AuthService {
       );
   }
 
-  // login(email: Pick<User,"email">, password: Pick<User,"password">): Observable<{ token: string, userId: Pick<User,"id"> }> {    
-  //   return this.http
-  //   .post<{ token: string, userId: Pick<User,"id">, name: string, email: string, role: string }>(`${this.url}/login`, { email, password }, this.httpOptions)
-  //     .pipe(
-  //       first(),
-  //       tap((tokenObject: { token: string, userId: Pick<User,"id">, name: string, email: string, role: string }) => {
-  //         this.userId = Number(tokenObject.userId);
-  //         localStorage.setItem("token", tokenObject.token);
-  //         localStorage.setItem("role", tokenObject.role);
-  //         this.router.navigate(['profile']);
-  //       }),
-  //       catchError(this.errorHandlerService.handleError<{ token: string, userId: Pick<User,"id">, role: string }>("login"))
-  //     );
-  // }
-
   login(email: Pick<User, "email">, password: Pick<User, "password">): Observable<{ token: string, userId: number }> {
     return this.http.post<{ token: string, userId: number, role: string }>(`${this.url}/login`, { email, password }, this.httpOptions)
       .pipe(
         first(),
         tap((tokenObject) => {
           localStorage.setItem("token", tokenObject.token);
-          localStorage.setItem("userId", tokenObject.userId.toString());
-          localStorage.setItem("role", tokenObject.role);
-          this.router.navigate(['profile']);
+          this.router.navigate(['/profile']).then(() => {
+            window.location.reload();
+          });
         }),
         catchError(this.errorHandlerService.handleError<{ token: string, userId: number, role: string }>("login"))
       );
-  }
+  }  
 
-
-  // googleLogin(token: string): Observable<User> {
-  //   return this.http.post<User>(`${this.url}/google-login`, { token }, this.httpOptions)
-  //       .pipe(
-  //           first(),
-  //           tap(user => {
-  //               localStorage.setItem('loggedInUser', JSON.stringify(user));
-  //               this.userId = user.id;
-  //               console.log("USER"+this.userId);
-  //               this.router.navigate(['profile']);
-  //           }),
-  //           catchError(this.errorHandlerService.handleError<User>("googleLogin"))
-  //       );
-  // }
   googleLogin(token: string): Observable<{ token: string, user: User }> {
     return this.http.post<{ token: string, user: User }>(`${this.url}/google-login`, { token }, this.httpOptions)
-        .pipe(
-            first(),
-            tap(response => {
-                localStorage.setItem('token', response.token);
-                localStorage.setItem('userId', response.user.id.toString());
-                localStorage.setItem('role', response.user.role);
-                this.router.navigate(['profile']);
-            }),
-            catchError(this.errorHandlerService.handleError<{ token: string, user: User }>("googleLogin"))
-        );
-}
-
-
+      .pipe(
+        first(),
+        tap(response => {
+          localStorage.setItem('token', response.token);
+          this.router.navigate(['/profile']).then(() => {
+            window.location.reload();
+          });
+        }),
+        catchError(this.errorHandlerService.handleError<{ token: string, user: User }>("googleLogin"))
+      );
+  }
+  
 
   sendEmailResetPassword(email: Pick<User, "email">): Observable<any> {
     console.log("Se ejecuta sendEmailResetPassword auth.service.ts: ", email);
@@ -140,25 +115,34 @@ export class AuthService {
         );
       }
 
-  logout(): void {
-    localStorage.removeItem('role');
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    google.accounts.id.disableAutoSelect();
-    sessionStorage.removeItem('loggedInUser');
-    this.router.navigate(['/login']);
-  }
+      logout(): void {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('loggedInUser');
+        google.accounts.id.disableAutoSelect();
+        this.router.navigate(['/login']).then(() => {
+          window.location.reload();
+        });
+      }
+      
 
   isAuthenticated(): boolean {
     return !!(localStorage.getItem('token'));
   }
 
   isAdmin(): boolean {
-    return localStorage.getItem('role') === "admin";
+    if(this.token){
+      this.decodedToken = jwtDecode(this.token);
+      return this.decodedToken.role === "admin";
+    }
+    return false;
   }
 
   getUserId() {
-    return localStorage.getItem('userId');
+    if(this.token){
+      this.decodedToken = jwtDecode(this.token);
+      return this.decodedToken.userId;
+    }
+    return false;
   }
 
   getUserRegistrations(): Observable<any> {
@@ -166,3 +150,4 @@ export class AuthService {
     return this.http.get(`${this.url}/user-registrations/${this.getUserId()}`);
   }
 }
+

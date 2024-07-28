@@ -28,6 +28,6 @@
   margin: 10px 0;
 }
 
-#checkout-btn {
+#checkout-btn, .not-authenticated button {
   background-color: #49a4b8;
 }

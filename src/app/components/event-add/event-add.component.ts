@@ -37,6 +37,10 @@ export class EventAddComponent implements OnInit{
   }
 
   addEvent(): void {
+    if (this.newEvent.price < 0) {
+      alert("El precio del evento no puede ser negativo.");
+      return;
+    }
     const formData = new FormData();
     formData.append('title', this.newEvent.title);
     formData.append('description', this.newEvent.description);

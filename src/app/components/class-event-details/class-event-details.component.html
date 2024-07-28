@@ -7,7 +7,11 @@
         <p class="price">${{price}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button id="checkout-btn" (click)="createPreference()" [disabled]="message!=''">Pagar e Inscribirse</button>
+        <button *ngIf="getAuthService().isAuthenticated()" mat-raised-button id="checkout-btn" (click)="createPreference()" [disabled]="message!=''">Pagar e Inscribirse</button>
+        <div class="not-authenticated" *ngIf="!getAuthService().isAuthenticated()">
+          <p>Para inscribirte inicia sesión con tu cuenta</p>
+          <button routerLink="/login">Iniciar Sesión</button>
+        </div>
       </mat-card-actions>
       <div id="wallet_container"></div>
       <div *ngIf="message" class="message">{{ message }}</div> 

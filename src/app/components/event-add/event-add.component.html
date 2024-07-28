@@ -11,7 +11,10 @@
       <input id="dateTime" type="datetime-local" [(ngModel)]="newEvent.dateTime" name="dateTime" required>      
       
       <label for="price">Precio</label>
-      <input id="price" type="number" [(ngModel)]="newEvent.price" name="price" required>
+      <input id="price" type="number" [(ngModel)]="newEvent.price" name="price" required min="0">
+      <div *ngIf="newEvent.price < 0" class="error">
+        El precio del evento no puede ser negativo.
+      </div>
 
       <label for="instructor">Instructor</label>
       <select id="instructor" [(ngModel)]="newEvent.instructor_id" name="instructor" required>

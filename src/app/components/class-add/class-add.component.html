@@ -8,7 +8,10 @@
       <textarea id="description" [(ngModel)]="newClass.description" name="description" required></textarea>
   
       <label for="monthlyFee">Cuota mensual</label>
-      <input id="monthlyFee" [(ngModel)]="newClass.monthlyFee" name="monthlyFee" required>
+      <input id="monthlyFee" [(ngModel)]="newClass.monthlyFee" name="monthlyFee" required min="0">
+      <div *ngIf="newClass.monthlyFee < 0" class="error">
+        La cuota mensual no puede ser negativa.
+      </div>
 
       <label for="instructor">Instructor</label>
       <select id="instructor" [(ngModel)]="newClass.instructor_id" name="instructor" required>
@@ -20,11 +23,6 @@
       
       <label for="imageUrl">Imagen</label>
       <input id="imageUrl" type="file" (change)="onFileChange($event)" name="imageUrl" required>
-  
-      <!-- <label for="days">Días de la Semana</label>
-    <select multiple [(ngModel)]="newClass.days" name="days" required>
-      <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-    </select> -->
 
     <label for="schedules">Horarios</label>
     <div *ngFor="let schedule of newClass.schedules; let i = index">
@@ -35,9 +33,6 @@
       <button type="button" (click)="removeSchedule(i)">Eliminar</button>
     </div>
     <button type="button" (click)="addSchedule()">Añadir Horario</button>
-
-    <!-- <label for="times">Horarios</label>
-    <input id="times" type="time" [(ngModel)]="newClass.time" name="time" required> -->
 
       <button type="submit">Agregar</button>
     </form>

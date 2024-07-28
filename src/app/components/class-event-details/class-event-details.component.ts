@@ -13,6 +13,7 @@ export class ClassEventDetailsComponent implements OnInit {
   price = null;
   message = '';  // Variable para mostrar mensajes al usuario
   userId: string | null;
+  isAuthenticated = false;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private authService: AuthService) {
     this.message = '';
@@ -24,8 +25,13 @@ export class ClassEventDetailsComponent implements OnInit {
       this.price = this.data.monthly_fee;
   }
 
+  getAuthService() {
+    return this.authService;
+  }
+
   ngOnInit(): void {
     this.checkEnrollment();
+    this.isAuthenticated = this.authService.isAuthenticated();
   }
 
   async checkEnrollment(): Promise<void> {

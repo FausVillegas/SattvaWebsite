@@ -51,8 +51,7 @@ export class LogInComponent implements OnInit {
 
    handleGoogleLogin(response: any) {
       if (response) {
-          this.authService.googleLogin(response.credential).subscribe(data => {
-              this.router.navigate(['profile']);
+          this.authService.googleLogin(response.credential).subscribe(data =>{
           });
       }
   }
@@ -143,13 +142,6 @@ export class LogInComponent implements OnInit {
       .subscribe(response => console.log('Correo enviado:', response));
    }
  }
- 
-   // googleLogin(): void {
-   //    console.log(JSON.parse(sessionStorage.getItem("loggedInUser")!).name);
-   //    this.authService.googleLogin(JSON.parse(sessionStorage.getItem("loggedInUser")!))
-   //       .subscribe();
-   //    this.router.navigate(['profile']);
-   // }
 
    googleLogin(): void {
       const token = sessionStorage.getItem("token");

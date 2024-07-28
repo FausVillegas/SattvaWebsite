@@ -12,12 +12,10 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class AddProductComponent implements OnInit{
   @ViewChild("formDirective") formDirective!: NgForm;
-  // @Output() create: EventEmitter<any> = new EventEmitter;
+  categories: string[] = ['Ejercicio', 'Meditación', 'Decoración'];
 
   productForm: FormGroup;
   selectedImage: File | undefined;
-
-  // isOpen = false;
 
   constructor(private authService: AuthService, private productService: ProductService) {
     this.productForm = this.createFormGroup();
@@ -34,7 +32,6 @@ export class AddProductComponent implements OnInit{
       category: new FormControl("", [Validators.required]),
       stock: new FormControl("", [Validators.required]),
       image_url: new FormControl(null, [Validators.required]),
-      // id_supplier: new FormControl("", [Validators.required]),
     });
  }
 
@@ -45,6 +42,10 @@ export class AddProductComponent implements OnInit{
   }
 
  onSubmit(): void {
+  if (this.productForm.get('sale_price')?.value < 0 || this.productForm.get('stock')?.value < 0) {
+    alert("Valor negativo no permitido.");
+    return;
+  }
   if (this.productForm.valid) {
     const formData = new FormData();
     formData.append('title', this.productForm.get('title')?.value);

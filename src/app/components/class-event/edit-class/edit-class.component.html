@@ -13,7 +13,10 @@
       
       <div class="form-group">
         <label for="monthly_fee">Cuota Mensual:</label>
-        <input id="monthly_fee" type="number" [(ngModel)]="classData.monthly_fee" name="monthly_fee" required class="form-control">
+        <input id="monthly_fee" type="number" [(ngModel)]="classData.monthly_fee" name="monthly_fee" required class="form-control" min="0">
+        <div *ngIf="classData.monthly_fee < 0" class="error">
+          La cuota mensual no puede ser negativa.
+        </div>>
       </div>
   
       <div class="form-group">
@@ -24,16 +27,13 @@
           </option>
         </select>
       </div>
-<!--   
-      <div class="form-group">
-        <label for="date">Fecha:</label>
-        <input id="date" type="date" [(ngModel)]="classData.date" name="date" required class="form-control">
-      </div>
-  
-      <div class="form-group">
-        <label for="time">Hora:</label>
-        <input id="time" type="time" [(ngModel)]="classData.time" name="time" required class="form-control">
-      </div> -->
+    
+    <div class="form-group">
+      <label for="imageUrl">Imagen</label>
+      <img *ngIf="classData.imageUrl" [src]="apiUrl + classData.imageUrl" alt="Imagen de la clase" class="class-image">
+      <input id="imageUrl" type="file" (change)="onFileChange($event)" name="imageUrl">
+    </div>    
+
       <label for="schedules">Horarios</label>
     <div *ngFor="let schedule of classData.schedules; let i = index">
       <select [(ngModel)]="schedule.day_of_week" name="day_of_week_{{i}}" required>

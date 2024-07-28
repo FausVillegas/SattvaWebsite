@@ -11,6 +11,7 @@ import { InstructorService } from "src/app/services/instructor.service";
 })
 export class EditClassComponent implements OnInit {
   classData: any = {};
+  apiUrl = 'http://localhost:3000/';
   selectedFile: File | undefined;
   instructors: Instructor[] = [];
   days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -34,10 +35,25 @@ export class EditClassComponent implements OnInit {
   }
 
   onSave() {
-    this.classService.updateClass(this.classData.id, this.classData).subscribe(() => {
+    if (this.classData.monthly_fee < 0) {
+      alert("La cuota mensual no puede ser negativa.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append('title', this.classData.title);
+    formData.append('description', this.classData.description);
+    formData.append('monthly_fee', this.classData.monthly_fee.toString());
+    formData.append('instructor_id', this.classData.instructor_id.toString());
+    formData.append('schedules', JSON.stringify(this.classData.schedules));
+    
+    if (this.selectedFile) {
+      formData.append('imageUrl', this.selectedFile);
+    }
+  
+    this.classService.updateClass(this.classData.id, formData).subscribe(() => {
       this.router.navigate(['/']);
     });
-  }
+  }  
 
   cancel() {
     this.router.navigate(['/']); 
@@ -49,6 +65,11 @@ export class EditClassComponent implements OnInit {
 
   removeSchedule(index: number) {
     this.classData.schedules.splice(index, 1);
+  }
+
+  onFileChange(event: any) {
+    this.selectedFile = event.target.files[0];
+    console.log(this.selectedFile);
   }
   
 }

@@ -11,6 +11,8 @@ import { InstructorService } from 'src/app/services/instructor.service';
 })
 export class EditEventComponent implements OnInit {
   eventData: any = {};
+  apiUrl = 'http://localhost:3000/';
+  selectedFile: File | undefined;
   instructors: any[] = [];
   formattedDateTime: any;
 
@@ -24,7 +26,6 @@ export class EditEventComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.eventService.getEventById(Number(id)).subscribe(data => {
-      console.log(data.event_datetime.toString());
       this.eventData = data;
     });
     this.instructorService.getInstructors().subscribe(data => {
@@ -44,9 +45,33 @@ export class EditEventComponent implements OnInit {
   }
 
   onSave() {
-    this.eventService.updateEvent(this.eventData.id, this.eventData).subscribe(() => {
+    if (this.eventData.price < 0) {
+      alert("El precio del evento no puede ser negativo.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', this.eventData.id);
+    formData.append('title', this.eventData.title);
+    formData.append('description', this.eventData.description);
+    formData.append('price', this.eventData.price.toString());
+    formData.append('instructor_id', this.eventData.instructor_id?.toString());
+    console.log(this.eventData.event_datetime);
+    formData.append('event_datetime', this.eventData.event_datetime);
+    console.log(formData.get('event_datetime'));
+
+    if (this.selectedFile) {
+      formData.append('imageUrl', this.selectedFile);
+    }
+
+    this.eventService.updateEvent(this.eventData.id, formData).subscribe(() => {
       this.router.navigate(['/']);  // Redirect after save
     });
+  }
+  
+  onFileChange(event: any) {
+    this.selectedFile = event.target.files[0];
+    console.log(this.selectedFile);
   }
 
   cancel() {

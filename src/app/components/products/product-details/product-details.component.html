@@ -19,7 +19,10 @@
       <span class="no-stock" *ngIf="product.stock===0"> No hay stock</span>
       <div class="quantity">
         <label for="quantity" class="product-quantity-label">Cantidad:</label>
-        <input type="number" id="quantity" min="1" max="8" [(ngModel)]="quantity" class="product-quantity-input">
+        <input type="number" id="quantity" [(ngModel)]="quantity" class="product-quantity-input" min="0" max="8">
+        <div *ngIf="quantity < 0" class="error">
+          Valor negativo no permitido.
+        </div>
       </div>
       <div class="action">
         <button type="button" (click)="addToCart(product, quantity)">Agregar al carrito</button>

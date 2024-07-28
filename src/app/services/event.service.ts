@@ -37,7 +37,7 @@ export class EventService {
     );
   }
 
-  updateEvent(id: number, eventData: SattvaEvent): Observable<SattvaEvent> {
+  updateEvent(id: number, eventData: any): Observable<SattvaEvent> {
     return this.http.put<SattvaEvent>(`${this.apiUrl}/${id}`, eventData);
   }
 

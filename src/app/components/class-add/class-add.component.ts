@@ -68,21 +68,11 @@ export class ClassAddComponent implements OnInit{
     this.newClass.schedules.splice(index, 1);
   }
 
-  // addClass() {
-  //   const formData = new FormData();
-  //   formData.append('title', this.newClass.title);
-  //   formData.append('description', this.newClass.description);
-  //   formData.append('monthlyFee', this.newClass.monthlyFee.toString());
-  //   formData.append('instructor_id', this.newClass.instructor_id.toString());
-  //   formData.append('schedules', JSON.stringify(this.newClass.schedules));
-  //   if(this.selectedFile)
-  //     formData.append('imageUrl', this.selectedFile);
-    
-  //   this.classService.addClass(formData).subscribe(() => {
-  //           this.router.navigate(['/addClass']);
-  //         });
-  // }
   addClass() {
+    if (this.newClass.monthlyFee < 0) {
+      alert("La cuota mensual no puede ser negativa.");
+      return;
+    }
     const formData = new FormData();
     formData.append('title', this.newClass.title);
     formData.append('description', this.newClass.description);

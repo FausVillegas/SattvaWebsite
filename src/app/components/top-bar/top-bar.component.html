@@ -60,7 +60,7 @@
           <!-- LogIn Btns -->
           <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
             <a *ngIf="!isAuthenticated()" routerLink="/login" class="text-sm font-medium text-gray-700 hover:text-gray-800">Iniciar sesión</a>
-            <a *ngIf="isAuthenticated()" (click)="logout()" routerLink="/login" class="text-sm font-medium text-gray-700 hover:text-gray-800">Cerrar sesión</a>
+            <a *ngIf="isAuthenticated()" (click)="logout()" class="text-sm font-medium text-gray-700 hover:text-gray-800">Cerrar sesión</a>
           </div>
 
             <!-- Search -->

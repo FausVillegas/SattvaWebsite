@@ -11,6 +11,6 @@ router.post('/', upload('imageUrl'), addClass);
 
 router.delete('/:id', deleteClass);
 
-router.put('/:id', updateClass);
+router.put('/:id', upload('imageUrl'), updateClass);
 
 export default router;

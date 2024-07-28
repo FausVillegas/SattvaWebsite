@@ -30,7 +30,7 @@ export default class SattvaEvent {
     }
 
     static update(eventData, eventId) {
-        return db.execute('UPDATE events SET title = ?, event_datetime = ?, description = ?, price = ?, instructor_id = ? WHERE id = ?',[eventData.title, eventData.event_datetime, eventData.description, eventData.price, eventData.instructor_id, eventId]);
+        return db.execute('UPDATE events SET title = ?, event_datetime = ?, description = ?, price = ?, instructor_id = ?, imageUrl = ? WHERE id = ?',[eventData.title, eventData.event_datetime, eventData.description, eventData.price, eventData.instructor_id, eventData.imageUrl, eventId]);
     }
 
     static registerForEvent(eventId, userId) {

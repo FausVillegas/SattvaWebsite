@@ -72,6 +72,10 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   addToCart(product: Product, quantity: number): void {
+    if (quantity < 0) {
+      alert("Valor negativo no permitido.");
+      return;
+    }
     console.log(`Added ${quantity} of ${product.title} to cart.`);
     this.cartService.addToCart(product, quantity);
   }

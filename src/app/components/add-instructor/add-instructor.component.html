@@ -48,7 +48,10 @@
       <input type="text" id="dni" [(ngModel)]="editingInstructor.dni" name="dni" required>
       
       <label for="salary">Salario:</label>
-      <input type="number" id="salary" [(ngModel)]="editingInstructor.salary" name="salary" required>
+      <input type="number" id="salary" [(ngModel)]="editingInstructor.salary" name="salary" required min="0">
+      <div *ngIf="editingInstructor.salary < 0" class="error">
+        No puede ser negativo.
+      </div>>
       
       <button type="submit">Guardar Cambios</button>
       <button type="button" (click)="cancelEdit()">Cancelar</button>

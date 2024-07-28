@@ -29,7 +29,7 @@ export default class SattvaClass {
     }
 
     static update(classData, classId) {
-        return db.execute('UPDATE classes SET title = ?, description = ?, monthly_fee = ?, instructor_id = ? WHERE id = ?',[classData.title, classData.description, classData.monthly_fee, classData.instructor_id, classId]);
+        return db.execute('UPDATE classes SET title = ?, description = ?, monthly_fee = ?, instructor_id = ?, imageUrl = ? WHERE id = ?',[classData.title, classData.description, classData.monthly_fee, classData.instructor_id, classData.imageUrl, classId]);
     }
 
     static updateSchedule(schedule) {

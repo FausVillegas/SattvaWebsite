@@ -11,6 +11,6 @@ router.post('/', upload('imageUrl'), addEvent);
 
 router.delete('/:id', deleteEvent);
 
-router.put('/:id', updateEvent);
+router.put('/:id', upload('imageUrl'), updateEvent);
 
 export default router;
