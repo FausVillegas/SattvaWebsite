@@ -69,4 +69,7 @@ export class ProductService {
     return this.http.put<Product>(`${this.url}/${productId}`, formData);
   }
 
+  getOrdersByStatus(status: boolean): Observable<any> {
+    return this.http.get<any>(`${this.url}/orders/by-status?status=${status}`);
+  }
 }

@@ -2,6 +2,7 @@
   <link href="https://fonts.googleapis.com/css?family=Bentham|Playfair+Display|Raleway:400,500|Suranna|Trocchi" rel="stylesheet">
 </head>
 <div class="container-add-product-btn">
+  <button *ngIf="getAuthService().isAdmin()" class="orders-list-btn" routerLink="/orders-list">Lista de ordenes</button>
   <button *ngIf="getAuthService().isAdmin()" class="add-product-btn" routerLink="/addProduct">Agregar producto nuevo</button>
 </div>
 <div class="product-list">

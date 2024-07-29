@@ -33,6 +33,7 @@ import { AddInstructorComponent } from './components/add-instructor/add-instruct
 import { EditClassComponent } from './components/class-event/edit-class/edit-class.component';
 import { EditEventComponent } from './components/class-event/edit-event/edit-event.component';
 import { EditProductComponent } from './components/products/edit-product/edit-product.component';
+import { OrdersListComponent } from './components/orders-list/orders-list.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { EditProductComponent } from './components/products/edit-product/edit-pr
     EditClassComponent,
     EditEventComponent,
     EditProductComponent,
+    OrdersListComponent,
   ],
   imports: [
     MatCardModule,
@@ -68,6 +70,7 @@ import { EditProductComponent } from './components/products/edit-product/edit-pr
       // { path: '', redirectTo: '/products', pathMatch: 'full'},
       { path: '', component: HomeComponent},
       { path: 'edit-product/:id', component: EditProductComponent, canActivate: [AdminGuardService] },
+      { path: 'orders-list', component: OrdersListComponent, canActivate: [AdminGuardService] },
       { path: 'my-registrations', component: UserRegistrationsComponent },
       { path: 'instructors', component: AddInstructorComponent, canActivate: [AdminGuardService]  },
       { path: 'profile', component: ProfileComponent},

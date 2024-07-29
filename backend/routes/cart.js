@@ -28,7 +28,6 @@ router.post("/", async (req, res) => {
 
         res.status(200).json({ message: "Item added to cart" });
     } catch (error) {
-        if (connection) await connection.rollback();
         res.status(500).json({ error: "Error adding item to cart" });
     }
 });

@@ -39,4 +39,8 @@ export default class Order {
     static findByPaymentId(paymentId) {
         return db.execute('SELECT * FROM orders WHERE payment_id = ?', [paymentId]);
     }
+
+    static findOrdersByStatus(status) {
+        return db.execute('SELECT * FROM orders WHERE status = ?', [status]);
+    }
 };

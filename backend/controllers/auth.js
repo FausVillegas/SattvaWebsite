@@ -155,7 +155,9 @@ export async function login(req, res, next) {
                 email: storedUser.email,
                 role: storedUser.role,
                 phone: storedUser.phone,
-                address: storedUser.address
+                address: storedUser.address,
+                location: storedUser.location,
+                dni: storedUser.dni
             },
             process.env.SECRETFORTOKEN,
             { expiresIn: '1h' }
@@ -179,7 +181,9 @@ export async function googleLogin(req, res, next) {
                 name: decoded.name,
                 email: decoded.email,
                 phone: decoded.phone,     
-                address: decoded.address  
+                address: decoded.address,
+                location: decoded.location,
+                dni: decoded.dni
             };
             await User.save(newUser);
             user = await User.find(decoded.email);
@@ -192,7 +196,9 @@ export async function googleLogin(req, res, next) {
                 email: user[0][0].email,
                 role: user[0][0].role,
                 phone: user[0][0].phone,
-                address: user[0][0].address
+                address: user[0][0].address,
+                location: user[0][0].location,
+                dni: user[0][0].dni
             },
             process.env.SECRETFORTOKEN,
             { expiresIn: '1h' }
@@ -214,16 +220,6 @@ export async function updateProfile(req, res, next) {
         if (user.length === 0) {
             return res.status(400).json({ message: 'El usuario con el email ' + email + ' no se encontró' });
         }
-        
-        // if(updatedProfile.name) {
-        //     await User.updateName(user[0].id, updatedProfile.name);
-        // }
-        // if(updatedProfile.phone) {
-        //     await User.updatePhone(user[0].id, updatedProfile.phone);
-        // }
-        // if(updatedProfile.address) {
-        //     await User.updateAddress(user[0].id, updatedProfile.address);
-        // }
 
         await User.updateProfile(user[0].id, updatedProfile);
         let [updatedUserData] = await User.find(email);

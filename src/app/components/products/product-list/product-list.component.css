@@ -6,7 +6,7 @@ body {
   padding-top: 1rem;
 }
 
-.add-product-btn , .delete-product-btn, .edit-product-btn{
+.add-product-btn , .delete-product-btn, .edit-product-btn, .orders-list-btn{
   height: 50px;
   box-sizing: border-box;
   border: transparent;
@@ -20,7 +20,7 @@ body {
   background-color: #0f8698;
   cursor: pointer;
   width: calc(100% - 96px);
-  margin: 0 auto 0 38px;
+  margin: 0 auto 10px 38px;
 }
 
 .delete-product-btn {

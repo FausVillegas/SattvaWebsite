@@ -143,7 +143,7 @@ export const createPreference = async (req, res) => {
       },
       auto_return: 'approved',
       metadata: { userId: userId, items: items },
-      notification_url: "https://fc47-181-170-144-157.ngrok-free.app/products/order/webhook"
+      notification_url: "https://fc47-181-170-144-157.ngrok-free.app/products/webhook"
     };
 
     const preference = new Preference(client);
