@@ -1,10 +1,10 @@
 <head>
   <link href="https://fonts.googleapis.com/css?family=Bentham|Playfair+Display|Raleway:400,500|Suranna|Trocchi" rel="stylesheet">
 </head>
-<div>
-  <div class="container-add-product-btn">
-    <button *ngIf="getAuthService().isAdmin()" class="add-product-btn" routerLink="/addProduct">Agregar producto nuevo</button>
-  </div>
+<div class="container-add-product-btn">
+  <button *ngIf="getAuthService().isAdmin()" class="add-product-btn" routerLink="/addProduct">Agregar producto nuevo</button>
+</div>
+<div class="product-list">
   <div *ngFor="let product of filteredProducts$ | async" class="product-card">
     <div class="product-img" [routerLink]="['/product/', product.id]">
       <img [src]="apiUrl + product.image_url" alt="{{ product.title }}" height="420" width="327">
@@ -16,8 +16,9 @@
       </div>
       <div class="product-price-btn">
         <p><span>{{ product.sale_price }}</span>$</p>
-        <button type="button" (click)="share(product)">Agregar a carrito</button>
+        <button type="button" (click)="addToCart(product)">Agregar a carrito</button>
       </div>
     </div>
+    <button *ngIf="getAuthService().isAdmin()" class="edit-product-btn" [routerLink]="'/edit-product/'+product.id">Modificar</button>
   </div>
 </div>

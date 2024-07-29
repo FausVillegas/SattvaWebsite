@@ -63,7 +63,7 @@ import initMercadoPago, { MercadoPagoInstance } from '@mercadopago/sdk-react/mer
 export class CartComponent implements OnInit {
   items: any[] = [];
   apiUrl = 'http://localhost:3000/';
-  checkoutForm = this.formBuilder.group({ name: '', address: '' });
+  // checkoutForm = this.formBuilder.group({ name: '', address: '' });
 
   constructor(
     private cartService: CartService,
@@ -95,7 +95,14 @@ export class CartComponent implements OnInit {
       this.createCheckoutButton(preference.id);
     } catch (error) {
       alert('Error');
+      console.error('Error createPreference() cart.component');
     }
+  }
+
+  updateQuantity(index: number, event: any): void {
+    const newQuantity = event.target.value;
+    if (newQuantity < 1) return;
+    this.cartService.updateItemQuantity(index, newQuantity);
   }
 
   initializeMercadoPago(): void {
@@ -126,6 +133,6 @@ export class CartComponent implements OnInit {
   }
 
   getCartService() { return this.cartService; }
-  onSubmit(): void { /* Existing code */ }
+
   removeItem(index: number) { this.cartService.removeItem(index); }
 }

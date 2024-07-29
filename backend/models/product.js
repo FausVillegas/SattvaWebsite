@@ -29,4 +29,8 @@ export default class Product {
     static findById(id) {
         return db.execute('SELECT * FROM products WHERE id = ?',[id]);
     }
+
+    static update(productId, updatedData) {
+        return db.execute('UPDATE products SET title = ?, description = ?, sale_price = ?, category = ?, stock = ?, image_url = ? WHERE id = ?',[updatedData.title, updatedData.description, updatedData.sale_price, updatedData.category, updatedData.stock, updatedData.image_url, productId]);
+    }
 };

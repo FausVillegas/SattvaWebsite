@@ -62,4 +62,28 @@ router.delete("/:userId/:productId", async (req, res) => {
     }
 });
 
+router.put('/:userId/:productId', async (req, res) => {
+    const userId = req.params.userId;
+    const productId = req.params.productId;
+    const { quantity } = req.body;
+    try {
+        // Find the cart item by user ID and product ID
+        const [cartItem] = await db.query('SELECT * FROM cartitems WHERE user_id = ? AND product_id = ?',[userId, productId]);
+        
+        if (!cartItem) {
+            return res.status(404).json({ message: "Item not found in cart" });
+        }
+  
+      // Update the quantity
+      cartItem[0].quantity = quantity;
+      const result = await db.query('UPDATE cartitems SET quantity = ? WHERE user_id = ? AND product_id = ?',[cartItem[0].quantity, cartItem[0].user_id, cartItem[0].product_id]);
+      console.log("UESR ID"+cartItem[0].quantity, cartItem[0].user_id, cartItem[0].product_id);
+    
+      res.json({ message: "Item quantity updated", cartItem });
+    } catch (error) {
+        console.error(error);
+      res.status(500).json({ message: "Server error", error });
+    }
+  });
+
 export default router;

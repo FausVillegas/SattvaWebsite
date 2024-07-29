@@ -1,4 +1,4 @@
-<div class="shopping-cart">
+<!-- <div class="shopping-cart">
   <h1>Resumen de compra</h1>
   <table>
     <thead>
@@ -25,4 +25,56 @@
   </div>
   <button (click)="createPreference()">Continuar compra</button>
   <div id="wallet_container"></div>
-</div>
+</div> -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <main>
+    <div class="basket">
+      <div class="basket-labels">
+        <ul>
+          <li class="item item-heading">Producto</li>
+          <li class="price">Precio</li>
+          <li class="quantity">Cantidad</li>
+          <li class="subtotal">Subtotal</li>
+        </ul>
+      </div>
+      <div *ngFor="let item of items; let i = index">
+        <div class="basket-product" >
+          <div class="item">
+            <div class="product-image">
+              <img  [src]='apiUrl + item.image_url' alt="product-image" class="product-frame">
+            </div>
+            <div class="product-details">
+              <h1><strong><span class="item-quantity">{{ item.quantity }}</span> x {{ item.title }}</strong></h1>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+          <div class="price">{{ item.sale_price }}</div>
+          <div class="quantity">
+            <input type="number" [value]="item.quantity" min="1" class="quantity-field" (input)="updateQuantity(i, $event)">
+          </div>          
+          <div class="subtotal">{{ item.sale_price * item.quantity }}</div>
+          <div class="remove">
+            <button (click)="removeItem(i)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside>
+      <div class="summary">
+        <div class="summary-total">
+          <div class="total-title">Total</div>
+          <div class="total-value final-value" id="basket-total">{{ getCartService().getTotalPrice() }}</div>
+        </div>
+        <div class="summary-checkout">
+          <button class="checkout-cta" (click)="createPreference()">Continuar compra</button>
+        </div>
+        <div id="wallet_container"></div>
+      </div>
+    </aside>
+  </main>
+</body>

@@ -6,7 +6,7 @@ body {
   padding-top: 1rem;
 }
 
-.add-product-btn , .delete-product-btn{
+.add-product-btn , .delete-product-btn, .edit-product-btn{
   height: 50px;
   box-sizing: border-box;
   border: transparent;
@@ -26,6 +26,13 @@ body {
 .delete-product-btn {
   font-size: 13px;
   margin: 40px 0 0 50px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
 }
 
 .product-card {

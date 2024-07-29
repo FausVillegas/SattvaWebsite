@@ -58,8 +58,7 @@ export class ProductListComponent implements OnInit{
     return this.productService.fetchAll();
   }
   
-  share(product : any) {
-    window.alert('The product has been shared!');
+  addToCart(product : any) {
     this.cartService.addToCart(product,1);
   }
 

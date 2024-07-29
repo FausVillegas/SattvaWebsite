@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -24,10 +24,15 @@ export class CartService {
   }
 
   addToCart(product: any, quantity: number): void {
-    const item = { userId: this.authService.getUserId(), productId: product.id, quantity };
-    this.http.post(`${this.apiUrl}/cart`, item).subscribe(() => {
-      this.loadCart();
-    });
+    if(product.stock-quantity >= 0) {
+      const item = { userId: this.authService.getUserId(), productId: product.id, quantity };
+      this.http.post(`${this.apiUrl}/cart`, item).subscribe(() => {
+        alert("Producto agregado al carrito.");
+        this.loadCart();
+      });
+    } else {
+      alert(`No hay suficiente stock para agregar ${quantity} de este producto al carrito.`);
+    }
   }
 
   removeItem(index: number): void {
@@ -50,5 +55,19 @@ export class CartService {
 
   getItemsInCart(): number {
     return this.getCartItems().reduce((total, item) => total + item.quantity, 0);
+  }
+
+  updateItemQuantity(index: number, quantity: number): void {
+    const cartItems = this.getCartItems();
+    const product = cartItems[index];
+    if (!product) return;
+    if(product.stock - quantity >= 0) {
+      const updatedItem = { product, quantity };
+      this.http.put(`${this.apiUrl}/cart/${this.authService.getUserId()}/${product.product_id}`, updatedItem).subscribe(() => {
+        this.loadCart();
+      });
+    } else {
+      alert(`No hay suficiente stock para agregar ${quantity} de este producto al carrito.`);
+    }
   }
 }

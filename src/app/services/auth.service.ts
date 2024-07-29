@@ -37,17 +37,36 @@ export class AuthService {
     return jwtEncode(payload, this.secretKey);
   }
 
-  updateProfile(email: string, updatedProfile: any): Observable<any> {
-    return this.http
-      .put<any>(`${this.url}/update-profile`, { email, updatedProfile }, this.httpOptions)
-      .pipe(
-        first(),
-        catchError(error => {
-          console.error('Update profile error', error);
-          return throwError(() => error);
-        })
-      );
+//   updateProfile(email: string, updatedProfile: any): Observable<any> {
+//     return this.http
+//       .put<any>(`${this.url}/update-profile`, { email, updatedProfile }, this.httpOptions)
+//       .pipe(
+//         first(),
+//         catchError(error => {
+//           console.error('Update profile error', error);
+//           return throwError(() => error);
+//         })
+//       );
+// }
+
+updateProfile(email: string, updatedProfile: any): Observable<any> {
+  return this.http
+    .put<any>(`${this.url}/update-profile`, { email, updatedProfile }, this.httpOptions)
+    .pipe(
+      first(),
+      tap(response => {
+        const updatedUserData = response.updatedUserData; // Replace with actual field if different
+        updatedUserData.userId = updatedUserData.id;
+        const newToken = this.encodeToken(updatedUserData); // Encode the updated user data
+        localStorage.setItem('token', newToken); // Update token in localStorage
+      }),
+      catchError(error => {
+        console.error('Update profile error', error);
+        return throwError(() => error);
+      })
+    );
 }
+
 
   signup(user: Omit<User, "id">): Observable<User> {
     return this.http

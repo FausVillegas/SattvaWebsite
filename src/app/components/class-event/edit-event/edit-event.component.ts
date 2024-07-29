@@ -56,9 +56,7 @@ export class EditEventComponent implements OnInit {
     formData.append('description', this.eventData.description);
     formData.append('price', this.eventData.price.toString());
     formData.append('instructor_id', this.eventData.instructor_id?.toString());
-    console.log(this.eventData.event_datetime);
     formData.append('event_datetime', this.eventData.event_datetime);
-    console.log(formData.get('event_datetime'));
 
     if (this.selectedFile) {
       formData.append('imageUrl', this.selectedFile);

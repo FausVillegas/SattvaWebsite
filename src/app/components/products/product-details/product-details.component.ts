@@ -42,11 +42,11 @@ export class ProductDetailsComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService
   ) {
-    this.getProduct();
+    // this.getProduct();
   }
 
   ngOnInit(): void {
-    // this.getProduct();
+    this.getProduct();
   }
 
   getProduct(): void {

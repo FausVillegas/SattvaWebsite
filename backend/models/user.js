@@ -14,8 +14,8 @@ export default class User {
 
     static updateProfile(userId, updatedProfile) {
         return db.execute(
-            'UPDATE users SET name = ?, phone = ?, address = ? WHERE id = ?',
-            [updatedProfile.name, updatedProfile.phone, updatedProfile.address, userId]
+            'UPDATE users SET name = ?, phone = ?, location = ?, address = ?, dni = ? WHERE id = ?',
+            [updatedProfile.name, updatedProfile.phone, updatedProfile.location, updatedProfile.address, updatedProfile.dni, userId]
         );
     }
 

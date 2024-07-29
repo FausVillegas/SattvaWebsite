@@ -32,6 +32,7 @@ import { UserRegistrationsComponent } from './components/user-registrations/user
 import { AddInstructorComponent } from './components/add-instructor/add-instructor.component';
 import { EditClassComponent } from './components/class-event/edit-class/edit-class.component';
 import { EditEventComponent } from './components/class-event/edit-event/edit-event.component';
+import { EditProductComponent } from './components/products/edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { EditEventComponent } from './components/class-event/edit-event/edit-eve
     AddInstructorComponent,
     EditClassComponent,
     EditEventComponent,
+    EditProductComponent,
   ],
   imports: [
     MatCardModule,
@@ -65,6 +67,7 @@ import { EditEventComponent } from './components/class-event/edit-event/edit-eve
     RouterModule.forRoot([
       // { path: '', redirectTo: '/products', pathMatch: 'full'},
       { path: '', component: HomeComponent},
+      { path: 'edit-product/:id', component: EditProductComponent, canActivate: [AdminGuardService] },
       { path: 'my-registrations', component: UserRegistrationsComponent },
       { path: 'instructors', component: AddInstructorComponent, canActivate: [AdminGuardService]  },
       { path: 'profile', component: ProfileComponent},

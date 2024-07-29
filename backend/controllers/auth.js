@@ -215,23 +215,25 @@ export async function updateProfile(req, res, next) {
             return res.status(400).json({ message: 'El usuario con el email ' + email + ' no se encontró' });
         }
         
-        // await User.updateProfile(user[0].id, updatedProfile);
+        // if(updatedProfile.name) {
+        //     await User.updateName(user[0].id, updatedProfile.name);
+        // }
+        // if(updatedProfile.phone) {
+        //     await User.updatePhone(user[0].id, updatedProfile.phone);
+        // }
+        // if(updatedProfile.address) {
+        //     await User.updateAddress(user[0].id, updatedProfile.address);
+        // }
 
-        if(updatedProfile.name) {
-            await User.updateName(user[0].id, updatedProfile.name);
-        }
-        if(updatedProfile.phone) {
-            await User.updatePhone(user[0].id, updatedProfile.phone);
-        }
-        if(updatedProfile.address) {
-            await User.updateAddress(user[0].id, updatedProfile.address);
-        }
-
-        res.status(200).json({ message: "Perfil actualizado con éxito", email: user[0].email });
+        await User.updateProfile(user[0].id, updatedProfile);
+        let [updatedUserData] = await User.find(email);
+        
+        res.status(200).json({ message: "Perfil actualizado con éxito", updatedUserData: updatedUserData[0] });
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
+        console.error(err);
         next(err);
     }
 }

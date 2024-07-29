@@ -63,5 +63,10 @@ export class ProductService {
     const url = `${this.url}?title_like=${searchTerm}`;
     return this.http.get<Product[]>(url);
   }
-  
+
+  updateProduct(productId: number, formData: any): Observable<Product> {
+    console.log(formData.title);
+    return this.http.put<Product>(`${this.url}/${productId}`, formData);
+  }
+
 }

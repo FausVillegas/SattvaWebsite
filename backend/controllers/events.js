@@ -99,16 +99,14 @@ export async function updateEvent(req, res, next) {
     try {
         const [eventData] = await SattvaEvent.findById(eventId);
         const oldImageUrl = eventData[0].imageUrl;
-        console.log("IMGGG"+oldImageUrl);
-        console.log("DATAAA"+eventData[0]);
 
         updatedData.imageUrl = imageUrl || oldImageUrl;
 
-        if(!isValidDatetime(updatedData.event_datetime)){
+        if(!isValidDatetime(updatedData.event_datetime)) {
             updatedData.event_datetime = eventData[0].event_datetime;
         }
 
-        console.log("TODOO"+updatedData.title, updatedData.event_datetime, updatedData.description, updatedData.price, updatedData.instructor_id, updatedData.imageUrl, eventId)
+        // console.log("TODOO"+updatedData.title, updatedData.event_datetime, updatedData.description, updatedData.price, updatedData.instructor_id, updatedData.imageUrl, eventId)
         const [result] = await SattvaEvent.update(updatedData, eventId);
         
         if (imageUrl && oldImageUrl) {
